@@ -8,7 +8,8 @@ const transporter = nodemailer.createTransport({
         user: process.env.USER,
         pass: process.env.PASS
     },
-    debug: true
+    debug: true,  // Enable debug logs
+    logger: true, // Output detailed logs
 });
 
 module.exports = { transporter };
