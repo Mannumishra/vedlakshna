@@ -14,8 +14,6 @@ import EditBanner from '../../Pages/Banners/EditBanner'
 import AllShopBanner from '../../Pages/ShopBanner/AllShopBanner'
 import AddShopBanner from '../../Pages/ShopBanner/AddShopBanner'
 import EditShopBanner from '../../Pages/ShopBanner/EditShopBanner'
-import AllVoucher from '../../Pages/Vouchers/AllVoucher'
-import CreateVoucher from '../../Pages/Vouchers/AddVoucher'
 import AllOrder from '../../Pages/Orders/AllOrder'
 import EditOrder from '../../Pages/Orders/EditOrder'
 import AllUsers from '../../Pages/Users/AllUsers'
@@ -27,6 +25,7 @@ import Login from '../auth/Login'
 import AllPincode from '../../Pages/PinCode/AllPincode'
 import AddPincode from '../../Pages/PinCode/AddPincode'
 import EditPincode from '../../Pages/PinCode/EditPincode'
+import AllContactInquery from '../../Pages/ContactInquery/AllContactInquery'
 
 const Home = () => {
   const loginValue = localStorage.getItem("login")
@@ -60,8 +59,7 @@ const Home = () => {
               <Route path={"/all-users"} element={<AllUsers />} />
 
               {/* --- Vouchers --- */}
-              <Route path={"/all-voucher"} element={<AllVoucher />} />   {/* // All Vouchers */}
-              <Route path={"/add-voucher"} element={<CreateVoucher />} />
+              <Route path={"/all-contact-inquery"} element={<AllContactInquery />} />
 
               {/* --- Tags --- */}
               <Route path={"/all-pincodes"} element={<AllPincode />} />

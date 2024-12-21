@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import bannerImage1 from "../../images/banner1.jpg";
-import bannerImage2 from "../../images/banner2.jpg";
-import bannerImage3 from "../../images/banner3.png";
-import bannerImage4 from "../../images/banner4.png";
 import "./hero.css";
 import Slider from "react-slick";
-import productImage from "../../images/productImage1.png";
 import grocery from "../../images/grocery.png";
 import CountUp from "react-countup";
 import article1 from "../../images/articleimg1.jpg";
@@ -20,13 +16,34 @@ import Swal from "sweetalert2";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [inView, setInView] = useState(false);
   const [selectedWeights, setSelectedWeights] = useState({});
   const [products, setProducts] = useState([]);
+  const [banner, setBanner] = useState([])
+
+  useEffect(() => {
+    const fetchBanners = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get('http://localhost:8000/api/all-banner');
+        const newData = response.data.banners
+        const filterData = newData.filter((x) => x.bannerStatus === true)
+        setBanner(filterData); // Assuming the API returns an array of banners
+        console.log(banner)
+      } catch (error) {
+        // toast.error("Failed to load banners!");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchBanners();
+  }, []);
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("https://api.panchgavyamrit.com/api/get-product");
+      const response = await axios.get("http://localhost:8000/api/get-product");
       setProducts(response.data.products);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -241,54 +258,29 @@ const Hero = () => {
             data-bs-ride="carousel"
             data-bs-interval="2000"
           >
-            {/* Overlay */}
-            {/* <div className="overlay">
-              <div className="overlayContent">
-                <h5>Fruits & Vegetables</h5>
-                <h1>Create a grocery interior in your home</h1>
-                <p>
-                  Minimarkets stock a variety of products, including basic
-                  groceries, snacks, beverages, household supplies, personal
-                  care items, and often tobacco products and newspapers.
-                </p>
-                <Link
-                  className="button_"
-                  to="#"
-                  aria-label="Check More Products"
-                >
-                  Check More Products <i className="bi bi-bag"></i>
-                </Link>
-              </div>
-            </div> */}
             <div className="carousel-inner">
-              <div className="carousel-item active">
-                <img
-                  src={bannerImage2}
-                  className="d-block w-100"
-                  alt="Grocery Banner 1"
-                />
-              </div>
-              <div className="carousel-item">
-                <img
-                  src={bannerImage1}
-                  className="d-block w-100"
-                  alt="Grocery Banner 2"
-                />
-              </div>
-              <div className="carousel-item">
-                <img
-                  src={bannerImage3}
-                  className="d-block w-100"
-                  alt="Grocery Banner 2"
-                />
-              </div>
-              <div className="carousel-item">
-                <img
-                  src={bannerImage4}
-                  className="d-block w-100"
-                  alt="Grocery Banner 2"
-                />
-              </div>
+              {banner.length > 0 ? (
+                banner.map((bannerItem, index) => (
+                  <div
+                    className={`carousel-item ${index === 0 ? "active" : ""}`}
+                    key={bannerItem.id || index} // Assuming each banner has a unique `id`
+                  >
+                    <img
+                      src={bannerItem.bannerImage} // Assuming the banner has an 'image' property
+                      className="d-block w-100"
+                      alt={`Banner ${index + 1}`}
+                    />
+                  </div>
+                ))
+              ) : (
+                <div className="carousel-item active">
+                  <img
+                    src={bannerImage1} // Fallback to a default image
+                    className="d-block w-100"
+                    alt="Default Banner"
+                  />
+                </div>
+              )}
             </div>
             <button
               className="carousel-control-prev"
@@ -296,10 +288,7 @@ const Hero = () => {
               data-bs-target="#carouselExampleControls"
               data-bs-slide="prev"
             >
-              <span
-                className="carousel-control-prev-icon"
-                aria-hidden="true"
-              ></span>
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
               <span className="visually-hidden">Previous</span>
             </button>
             <button
@@ -308,15 +297,13 @@ const Hero = () => {
               data-bs-target="#carouselExampleControls"
               data-bs-slide="next"
             >
-              <span
-                className="carousel-control-next-icon"
-                aria-hidden="true"
-              ></span>
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
               <span className="visually-hidden">Next</span>
             </button>
           </div>
         </div>
       </section>
+
 
       <section className="hero-product">
         <div className="container">

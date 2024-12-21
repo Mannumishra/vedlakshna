@@ -15,6 +15,7 @@ const Header = () => {
     setSearch(!search);
   };
 
+  const loginValue = sessionStorage.getItem("Login")
   return (
     <>
       {/* Top Header Section */}
@@ -49,14 +50,15 @@ const Header = () => {
                 <p onClick={searchbarToggle} style={{ cursor: "pointer" }}>
                   <i className="bi bi-search" aria-hidden="true"></i> Search
                 </p>
-                <button onClick={(()=>navigate('/register'))} className="btn btn-primary">
-                  {/* <Link
-                    className="text-white text-decoration-none"
-                    to="/register"
-                  > */}
-                    <i className="bi bi-person" aria-hidden="true"></i> Register
-                  {/* </Link> */}
-                </button>
+                {
+                  loginValue ?
+                    <button onClick={(() => navigate('/profile'))} className="btn btn-primary">
+                      <i className="bi bi-person" aria-hidden="true"></i> Profile
+                    </button> :
+                    <button onClick={(() => navigate('/register'))} className="btn btn-primary">
+                      <i className="bi bi-person" aria-hidden="true"></i> Register
+                    </button>
+                }
               </div>
             </div>
           </div>
@@ -79,17 +81,17 @@ const Header = () => {
             </div>
           </div>
 
-          
-      {search ? (
-        <div className="global-search">
-          <input
-            type="search"
-            placeholder="Search Products..."
-            name="search-global"
-            id=""
-          />
-        </div>
-      ) : null}
+
+          {search ? (
+            <div className="global-search">
+              <input
+                type="search"
+                placeholder="Search Products..."
+                name="search-global"
+                id=""
+              />
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -99,13 +101,13 @@ const Header = () => {
           <div className="row align-items-center">
             <div className="col-md-2 col-6">
               <Link to={'/'}>
-              <img
-                style={{ objectFit: "cover" }}
-                src={logo}
-                className="w-50"
-                alt=""
+                <img
+                  style={{ objectFit: "cover" }}
+                  src={logo}
+                  className="w-50"
+                  alt=""
                 />
-                </Link>
+              </Link>
             </div>
             <div className="col-md-6 d-none d-md-block">
               <nav className="header-main">
@@ -166,13 +168,13 @@ const Header = () => {
         aria-hidden={!sidebarOpen}
       >
         <div className="sidebarCloseBtn">
-        <button
-          className="close-btn"
-          onClick={toggleSidebar}
-          aria-label="Close Sidebar"
-        >
-          &times;
-        </button>
+          <button
+            className="close-btn"
+            onClick={toggleSidebar}
+            aria-label="Close Sidebar"
+          >
+            &times;
+          </button>
         </div>
         <ul className="list-unstyled">
           <li>

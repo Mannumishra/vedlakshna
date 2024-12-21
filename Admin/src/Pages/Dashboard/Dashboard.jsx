@@ -7,13 +7,22 @@ const Dashboard = () => {
     <div className="dashboard-container">
       <h1 className="dashboard-title">Admin Dashboard</h1>
       <div className="dashboard-grid">
-        {/* Dashboard Section */}
-        {/* <div className="dashboard-card">
-          <i className="fa-solid fa-chart-line dashboard-icon"></i>
-          <h4>Dashboard</h4>
-          <p>Overview of system analytics and performance.</p>
-          <Link to="/dashboard" className="dashboard-link">Go to Dashboard</Link>
-        </div> */}
+
+        {/* Manage Orders Section */}
+        <div className="dashboard-card">
+          <i className="fa-solid fa-cart-shopping dashboard-icon"></i>
+          <h4>Manage Orders</h4>
+          <p>Track and update customer orders.</p>
+          <Link to="/all-orders" className="dashboard-link">Manage Orders</Link>
+        </div>
+
+        <div className="dashboard-card">
+          <i className="fa-solid fa-comment-dots dashboard-icon"></i>
+          <h4>Manage Inquiries</h4>
+          <p>View and respond to customer inquiries efficiently.</p>
+          <Link to="/all-contact-inquery" className="dashboard-link">View Inquiries</Link>
+        </div>
+
 
         {/* Manage Category Section */}
         <div className="dashboard-card">
@@ -39,13 +48,7 @@ const Dashboard = () => {
           <Link to="/all-users" className="dashboard-link">View Users</Link>
         </div>
 
-        {/* Manage Orders Section */}
-        <div className="dashboard-card">
-          <i className="fa-solid fa-cart-shopping dashboard-icon"></i>
-          <h4>Manage Orders</h4>
-          <p>Track and update customer orders.</p>
-          <Link to="/all-orders" className="dashboard-link">Manage Orders</Link>
-        </div>
+
 
         {/* Manage Pincode Section */}
         <div className="dashboard-card">

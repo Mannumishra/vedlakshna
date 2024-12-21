@@ -54,7 +54,7 @@ const Cart = () => {
         <div className="container">
           <div className="row">
             <div className="col-md-6">
-              <Link to="/product/product-details" className="back-icon text-decoration-none text-black d-flex align-items-center gap-2">
+              <Link to="/all-products" className="back-icon text-decoration-none text-black d-flex align-items-center gap-2">
                 <i className="bi bi-arrow-left text-black"></i> Back to category
               </Link>
             </div>
@@ -143,7 +143,7 @@ const Cart = () => {
             </table>
           </div>
           <div className="d-flex justify-content-between">
-            <button onClick={() => navigate("/")} className="add-to-cart">
+            <button onClick={() => navigate("/all-products")} className="add-to-cart">
               Continue Shopping
             </button> &nbsp;
             <button onClick={() => navigate("/product/product-details/cart/checkout")} className="add-to-cart">

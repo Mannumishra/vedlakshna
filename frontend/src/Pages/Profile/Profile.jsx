@@ -1,8 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./profile.css";
 import image from '../../images/footer1.jpg'
+import axios from "axios";
 const Profile = () => {
+  const [data, setData] = useState({});
+  const [orders, setOrders] = useState([]);
+  const userId = sessionStorage.getItem("userId");
+
+  const getUserData = async () => {
+    try {
+      const res = await axios.get("http://localhost:8000/api/get-user/" + userId);
+      if (res.status === 200) {
+        setData(res.data.data);
+        // Assuming orders are fetched from a different API endpoint
+        const ordersRes = await axios.get(`http://localhost:8000/api/all-order-by-userid/${userId}`);
+        if (ordersRes.status === 200) {
+          setOrders(ordersRes.data.data); // Set the orders from API response
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const logOut = ()=>{
+    sessionStorage.clear()
+    window.location.href ="/login"
+  }
+  useEffect(() => {
+    getUserData();
+  }, [userId]);
   return (
     <>
       <section className="minibreadCrumb">
@@ -10,21 +38,17 @@ const Profile = () => {
           <div className="row">
             <div className="col-md-6">
               <Link
-                to="/product/product-details"
+                to="/"
                 className="back-icon text-decoration-none text-black d-flex align-items-center gap-2"
               >
-                <i className="bi bi-arrow-left text-black"></i> Back to category
+                <i className="bi bi-arrow-left text-black"></i> Back to Home
               </Link>
             </div>
             <div className="col-md-6">
               <div className="text-black d-flex justify-content-end gap-2">
-                <Link className="text-black" to="/">
-                  <i className="bi bi-house"></i>
-                </Link>
-                /
-                <Link className="text-black" to="#">
-                  Your Profile
-                </Link>
+                <button className="btn btn-primary" onClick={logOut}>
+                  <i className="bi bi-box-arrow-right"></i>  Logout
+                </button>
               </div>
             </div>
           </div>
@@ -35,153 +59,103 @@ const Profile = () => {
         <div className="d-flex justify-content-center">
           <div className="prifileContent">
             <p>
-              <b style={{ color: "var(--themeColor)" }}>Name</b> : Gourav
-              Panchal
+              <b style={{ color: "var(--themeColor)" }}>Name</b> : {data.name}
             </p>
             <p>
-              <b style={{ color: "var(--themeColor)" }}>Email</b> :
-              Gouravpanchal80107@gmail.com
+              <b style={{ color: "var(--themeColor)" }}>Email</b> :  {data.email}
             </p>
           </div>
         </div>
 
-        {/* ----Order History---- */}
-        {/* <div className="orderHistory">
-          <h2>Order History</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Date</th>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Total Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>101</td>
-                <td>2024-11-20</td>
-                <td>Wireless Mouse</td>
-                <td>2</td>
-                <td>$40</td>
-                <td>Delivered</td>
-              </tr>
-              <tr>
-                <td>102</td>
-                <td>2024-11-22</td>
-                <td>Bluetooth Speaker</td>
-                <td>1</td>
-                <td>$60</td>
-                <td>Shipped</td>
-              </tr>
-              <tr>
-                <td>103</td>
-                <td>2024-11-23</td>
-                <td>Gaming Keyboard</td>
-                <td>1</td>
-                <td>$80</td>
-                <td>Processing</td>
-              </tr>
-            </tbody>
-          </table>
-        </div> */}
-
         <div className="oderHistory">
-          <div className="row">
-            {/* Order Details Section (4 Columns) */}
-            <div className="col-md-4">
-              <h4 className="mb-3">Order Details</h4>
-              <table className="table table-bordered">
-                <tbody>
-                  <tr>
-                    <td>
-                      <strong>Order ID</strong>
-                    </td>
-                    <td>675ecc36835cb6966697c355</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Order Status</strong>
-                    </td>
-                    <td>Order is Placed</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Payment Mode</strong>
-                    </td>
-                    <td>NetBanking</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Payment Status</strong>
-                    </td>
-                    <td>Created</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Total</strong>
-                    </td>
-                    <td>₹219.5</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <strong>Date</strong>
-                    </td>
-                    <td>15/12/2024</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+          {orders.length > 0 ? (
+            orders.map((order) => (
+              <div className="row" key={order._id}>
+                {/* Order Details Section (4 Columns) */}
+                <div className="col-md-4">
+                  <h4 className="mb-3">Order Details</h4>
+                  <table className="table table-bordered">
+                    <tbody>
+                      <tr>
+                        <td>
+                          <strong>Order ID</strong>
+                        </td>
+                        <td>{order._id}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Order Status</strong>
+                        </td>
+                        <td>{order.orderStatus}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Payment Mode</strong>
+                        </td>
+                        <td>{order.paymentMethod}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Payment Status</strong>
+                        </td>
+                        <td>{order.paymentStatus}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Total</strong>
+                        </td>
+                        <td>₹{order.totalAmount}</td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <strong>Date</strong>
+                        </td>
+                        <td>{new Date(order.orderDate).toLocaleDateString()}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
 
-            {/* Product Details Table (8 Columns) */}
-            <div className="col-md-8">
-              <h4 className="mb-3">Product Details</h4>
-              <table className="table table-bordered">
-                <thead className="table-dark">
-                  <tr>
-                    <th>Pic</th>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Price</th>
-                    <th>Qty</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>
-                      <img
-                        src={image}
-                        alt="Product 1"
-                        className="img-thumbnail"
-                      />
-                    </td>
-                    <td>GESPUNAH Womens, Ladies, Kids handkerchief</td>
-                    <td>Free</td>
-                    <td>₹99.5</td>
-                    <td>1</td>
-                    <td>₹99.5</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <img
-                        src={image}
-                        alt="Product 2"
-                        className="img-thumbnail"
-                      />
-                    </td>
-                    <td>GESPUNAH premium pain loafer socks pack of 5</td>
-                    <td>One size</td>
-                    <td>₹120</td>
-                    <td>1</td>
-                    <td>₹120</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+                {/* Product Details Table (8 Columns) */}
+                <div className="col-md-8">
+                  <h4 className="mb-3">Product Details</h4>
+                  <table className="table table-bordered">
+                    <thead className="table-dark">
+                      <tr>
+                        <th>Pic</th>
+                        <th>Name</th>
+                        <th>Weight</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {order.products.map((product) => (
+                        <tr key={product._id}>
+                          <td>
+                            <img
+                              src={product.productImage}
+                              alt={product.productName}
+                              className="img-thumbnail"
+                              style={{ width: "80px", height: "80px" }}
+                            />
+                          </td>
+                          <td>{product.productName}</td>
+                          <td>{product.weight}</td>
+                          <td>₹{product.price}</td>
+                          <td>{product.quantity}</td>
+                          <td>₹{product.price * product.quantity}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No orders found.</p>
+          )}
         </div>
         {/* ----Order History---- end */}
       </div>

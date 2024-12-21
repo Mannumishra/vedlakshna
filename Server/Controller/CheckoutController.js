@@ -175,3 +175,23 @@ exports.deleteOrder = async (req, res) => {
         console.log(error)
     }
 }
+
+
+exports.getorderByUserID = async (req, res) => {
+    try {
+        const data = await Checkout.find({ userId: req.params.id })
+        if (!data) {
+            return res.status(404).json({
+                success: false,
+                message: "Order Not Found"
+            })
+        }
+        res.status(200).json({
+            success: true,
+            message: "Order Found Successfully",
+            data: data
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}

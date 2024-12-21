@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./register.css";
 import men from "../../images/men.gif";
 import mail from "../../images/email-register.gif";
@@ -6,10 +6,55 @@ import password from "../../images/password.gif";
 import repeatPassword from "../../images/repeat-password.gif";
 import signup from "../../images/signup.gif";
 import login from "../../images/login.gif";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const Register = () => {
+  const navigate = useNavigate()
+  const [cPass, setCpass] = useState("")
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    password: ""
+  })
+
+  const getinputData = (e) => {
+    const { name, value } = e.target
+    setData({ ...data, [name]: value })
+  }
+  const postData = async (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    try {
+      if (data.password === cPass) {
+        const res = await axios.post("http://localhost:8000/api/signup", data);
+        if (res.status === 201) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Registration Successful!',
+            text: 'You have successfully registered.',
+          });
+          navigate("/login")
+        }
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Registration Failed!',
+          text: 'Passwords do not match. Please try again.',
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed!',
+        text: error.response?.data?.message || 'There was an issue with your registration. Please try again.',
+      });
+    }
+  };
+
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -33,14 +78,14 @@ const Register = () => {
                 <h2>
                   <b>Sign Up</b>
                 </h2>
-                <form action="">
+                <form onSubmit={postData}>
                   <div className="register-field">
                     <img src={men} alt="Name Icon" />
-                    <input type="text" name="name" placeholder="Your Name" />
+                    <input type="text" name="name" placeholder="Your Name" onChange={getinputData} />
                   </div>
                   <div className="register-field">
                     <img src={mail} alt="Email Icon" />
-                    <input type="text" name="email" placeholder="Your Email" />
+                    <input type="text" name="email" placeholder="Your Email" onChange={getinputData} />
                   </div>
                   <div className="register-field">
                     <img src={password} alt="Password Icon" />
@@ -48,6 +93,7 @@ const Register = () => {
                       type="password"
                       name="password"
                       placeholder="Password"
+                      onChange={getinputData}
                     />
                   </div>
                   <div className="register-field">
@@ -56,6 +102,7 @@ const Register = () => {
                       type="password"
                       name="repeat-password"
                       placeholder="Repeat Password"
+                      onChange={(e) => setCpass(e.target.value)}
                     />
                   </div>
                   <div className="terms">

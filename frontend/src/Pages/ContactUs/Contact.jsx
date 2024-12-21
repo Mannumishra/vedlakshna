@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./contact.css";
 import call from "../../images/call.gif";
 import address from "../../images/address.gif";
@@ -6,7 +6,51 @@ import email from "../../images/email.gif";
 import time from "../../images/time.gif";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import axios from "axios";
+import Swal from "sweetalert2";
 const Contact = () => {
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    number: '',
+    subject: "",
+    message: ""
+  })
+
+  const getInputData = (e) => {
+    const { name, value } = e.target
+    setData({ ...data, [name]: value })
+  }
+
+  const postData = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await axios.post("http://localhost:8000/api/send-enquery", data)
+      if (res.status === 200) {
+        Swal.fire({
+          title: 'Success!',
+          text: 'Your enquiry has been sent successfully.',
+          icon: 'success',
+          confirmButtonText: 'Ok'
+        });
+        setData({
+          name: "",
+          email: "",
+          number: '',
+          subject: "",
+          message: ""
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an issue sending your enquiry.',
+        icon: 'error',
+        confirmButtonText: 'Try Again'
+      });
+    }
+  }
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -162,26 +206,26 @@ const Contact = () => {
                   For all enquiries, please email us using the contact form
                   below
                 </p>
-                <form action="">
+                <form onSubmit={postData}>
                   <div className="contact-form-field">
                     <label htmlFor="name">Your Name</label>
-                    <input type="text" name="name" />
+                    <input type="text" name="name" value={data.name} placeholder="Full Name" required onChange={getInputData} />
                   </div>
                   <div className="contact-form-field">
-                    <label htmlFor="last name">Last Name</label>
-                    <input type="text" name="last_name" />
+                    <label htmlFor="name">Your Number</label>
+                    <input type="number" name="number" value={data.number} placeholder="Phone Number" required onChange={getInputData} />
                   </div>
                   <div className="contact-form-field">
                     <label htmlFor="email">E-Mail Address</label>
-                    <input type="text" name="email" />
+                    <input type="email" name="email" value={data.email} placeholder="Email" required onChange={getInputData} />
                   </div>
                   <div className="contact-form-field">
                     <label htmlFor="subject">Subject</label>
-                    <input type="text" name="subject" />
+                    <input type="text" name="subject" value={data.subject} placeholder="Subject" required onChange={getInputData} />
                   </div>
                   <div className="contact-form-field">
-                    <label htmlFor="subject">Enquiry</label>
-                    <textarea name="enquiry" id=""></textarea>
+                    <label htmlFor="subject">Message</label>
+                    <textarea name="message" id="" value={data.message} placeholder="Message" required onChange={getInputData}></textarea>
                   </div>
                   <div className="contact-form-field text-center">
                     <button>Submit</button>

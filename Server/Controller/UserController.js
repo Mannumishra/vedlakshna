@@ -82,6 +82,29 @@ const getRecords = async (req, res) => {
     }
 };
 
+
+const getSingleRecords = async (req, res) => {
+    try {
+        const users = await User.findById(req.params.id); // Fetch all users
+        if (!users) {
+            return res.status(404).json({
+                success: false,
+                message: "REcord Not Found"
+            })
+        }
+        res.status(200).json({
+            success: true,
+            data: users,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Error fetching users.",
+        });
+    }
+};
+
 const deleteRecord = async (req, res) => {
     const { id } = req.params; // Extract user ID from route params
     try {
@@ -143,5 +166,5 @@ const login = async (req, res) => {
 };
 
 module.exports = {
-    createRecord, getRecords, deleteRecord, login
+    createRecord, getRecords, deleteRecord, login , getSingleRecords
 }

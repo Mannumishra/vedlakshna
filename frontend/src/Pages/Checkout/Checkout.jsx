@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import axios from "axios";
 const Checkout = () => {
+  const userId = sessionStorage.getItem("userId")
   const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [shipping, setShipping] = useState(0);
@@ -56,14 +57,14 @@ const Checkout = () => {
   const handleConfirmOrder = async (event) => {
     event.preventDefault();
     const checkoutData = {
-      userId: "6762ae51f47170e1f4a1eb32",
+      userId: userId,
       products: cartItems,
       shippingAddress,
       paymentMethod,
     };
 
     try {
-      const res = await axios.post("https://api.panchgavyamrit.com/api/checkout", checkoutData);
+      const res = await axios.post("http://localhost:8000/api/checkout", checkoutData);
       console.log(res);
       if (res.status === 201) {
         if (paymentMethod === "Online") {
@@ -76,7 +77,7 @@ const Checkout = () => {
             description: "Checkout Payment",
             order_id: razorpayOrder.id,
             handler: async (response) => {
-              const verifyResponse = await axios.post("https://api.panchgavyamrit.com/api/payment/verify", {
+              const verifyResponse = await axios.post("http://localhost:8000/api/payment/verify", {
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_order_id: response.razorpay_order_id,
                 razorpay_signature: response.razorpay_signature,
