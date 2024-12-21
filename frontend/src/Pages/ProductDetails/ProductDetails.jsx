@@ -30,7 +30,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/single-product/${id}`);
+        const response = await axios.get(`https://api.panchgavyamrit.com/api/single-product/${id}`);
         setProductDetails(response.data.product);
         // Set the first image as the default selected image
         setCurrentImage(response.data.product.productImage[0]);

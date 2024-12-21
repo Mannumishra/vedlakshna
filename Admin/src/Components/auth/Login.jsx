@@ -12,7 +12,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8000/api/log-in', { email, password }, { withCredentials: true });
+      const response = await axios.post('https://api.panchgavyamrit.com/api/log-in', { email, password }, { withCredentials: true });
       if (response.status === 200) {
         toast.success('Login successful!');
         localStorage.setItem("login", true)

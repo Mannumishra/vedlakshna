@@ -15,7 +15,7 @@ const EditOrder = () => {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/api/single-order-data/${orderId}`);
+                const response = await axios.get(`https://api.panchgavyamrit.com/api/single-order-data/${orderId}`);
                 if (response.data.success) {
                     setOrder(response.data.data);
                     setOrderStatus(response.data.data.orderStatus);
@@ -36,7 +36,7 @@ const EditOrder = () => {
 
     const handleUpdate = async () => {
         try {
-            const response = await axios.put(`http://localhost:8000/api/update-order/${orderId}`, {
+            const response = await axios.put(`https://api.panchgavyamrit.com/api/update-order/${orderId}`, {
                 orderStatus,
                 paymentStatus,
             });

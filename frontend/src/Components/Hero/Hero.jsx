@@ -26,7 +26,7 @@ const Hero = () => {
     const fetchBanners = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('http://localhost:8000/api/all-banner');
+        const response = await axios.get('https://api.panchgavyamrit.com/api/all-banner');
         const newData = response.data.banners
         const filterData = newData.filter((x) => x.bannerStatus === true)
         setBanner(filterData); // Assuming the API returns an array of banners
@@ -43,7 +43,7 @@ const Hero = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/api/get-product");
+      const response = await axios.get("https://api.panchgavyamrit.com/api/get-product");
       setProducts(response.data.products);
     } catch (error) {
       console.error("Error fetching products:", error);

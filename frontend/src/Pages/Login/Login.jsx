@@ -23,7 +23,7 @@ const Login = () => {
   const postData = async (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
     try {
-      const res = await axios.post("http://localhost:8000/api/log-in", data);
+      const res = await axios.post("https://api.panchgavyamrit.com/api/log-in", data);
       console.log(res)
       if (res.status === 200) {
         Swal.fire({
