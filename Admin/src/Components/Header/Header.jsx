@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import './Header.css'
-import axios from 'axios'; 
+import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const Header = () => {
@@ -15,19 +15,19 @@ const Header = () => {
 
   const logout = async () => {
     try {
-        const response = await axios.post('https://api.panchgavyamrit.com/api/log-out', {}, { withCredentials: true });
-        if (response.status === 200) {
-            localStorage.clear(); // Clear all local storage data
-            toast.success("Logout successful!"); // Added feedback for successful logout
-            navigate('/log-in'); // Redirect to login page
-        } else {
-            toast.error(response.data.message || "Logout failed!");
-        }
+      const response = await axios.post('https://api.panchgavyamrit.com/api/log-out', {}, { withCredentials: true });
+      if (response.status === 200) {
+        localStorage.clear(); // Clear all local storage data
+        toast.success("Logout successful!"); // Added feedback for successful logout
+        window.location.href = '/log-in' // Redirect to login page
+      } else {
+        toast.error(response.data.message || "Logout failed!");
+      }
     } catch (error) {
-        console.error("Error during logout:", error);
-        toast.error(error.response?.data?.message || "Something went wrong!");
+      console.error("Error during logout:", error);
+      toast.error(error.response?.data?.message || "Something went wrong!");
     }
-};
+  };
 
 
   const isActive = (path) => location.pathname.startsWith(path);
