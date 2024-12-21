@@ -120,14 +120,15 @@ const login = async (req, res) => {
 
         const token = jwt.sign({ id: user._id, role: user.role },
             user.role === 'Admin' ? process.env.JWT_KEY_ADMIN : process.env.JWT_KEY_USER,
-            { expiresIn: '2m' });  // Token expires in 2 minutes
+            { expiresIn: '1d' });  // Token expires in 2 minutes
 
         // Set token in HTTP-only cookie
         res.cookie('token', token, {
-            httpOnly: true,
-            secure: false,
-            maxAge: 2 * 60 * 1000,  // Token will expire in 2 minutes
-            sameSite: 'Strict',
+            httpOnly: true,               // Prevent JavaScript access
+            secure: true,                 // Ensure cookie is sent over HTTPS
+            maxAge: 24 * 60 * 60 * 1000,  // 1-day expiry
+            sameSite: 'None',             // Allow cross-site usage (if needed)
+            domain: '.panchgavyamrit.com' // Allow across main domain and subdomains
         });
 
         res.status(200).json({

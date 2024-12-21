@@ -14,12 +14,12 @@ const Login = () => {
     try {
       const response = await axios.post('https://api.panchgavyamrit.com/api/log-in', { email, password }, { withCredentials: true });
       if (response.status === 200) {
-          toast.success('Login successful!');
-          localStorage.setItem("login" ,true)
-          window.location.href = '/admin/dashboard';
-        } else {
-          toast.error(response.data.message || 'Something went wrong!');
-        }
+        toast.success('Login successful!');
+        localStorage.setItem("login", true)
+        window.location.href = '/admin/dashboard';
+      } else {
+        toast.error(response.data.message || 'Something went wrong!');
+      }
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.message || 'Something went wrong!');

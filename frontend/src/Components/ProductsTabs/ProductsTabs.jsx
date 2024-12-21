@@ -85,7 +85,7 @@ const ProductsTabs = () => {
 
   const handleViewDetails = (productId) => {
     const selectedWeight = selectedWeights[productId];
-  
+
     if (!selectedWeight) {
       Swal.fire({
         icon: "error",
@@ -94,11 +94,11 @@ const ProductsTabs = () => {
       });
       return;
     }
-  
+
     const selectedProductInfo = products
       .find((product) => product._id === productId)
       ?.productInfo.find((info) => info.productweight === selectedWeight);
-  
+
     if (selectedProductInfo) {
       navigate(
         `/product/product-details/${productId}?weight=${selectedWeight}&price=${selectedProductInfo.productFinalPrice}`
@@ -111,7 +111,7 @@ const ProductsTabs = () => {
       });
     }
   };
-  
+
 
   return (
     <section className="products-tabs mt-3">

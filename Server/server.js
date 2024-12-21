@@ -1,7 +1,7 @@
 const dotenv = require("dotenv")
 dotenv.config()
+
 const express = require("express")
-const { connectDB } = require("./DB/ConnectDatabase")
 const cookieParser = require('cookie-parser');
 const cors = require("cors")
 const rateLimit = require("express-rate-limit");
@@ -9,6 +9,9 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const hpp = require("hpp");
+
+
+const { connectDB } = require("./DB/ConnectDatabase")
 const CategoryRouter = require("./Routes/categoryRoutes")
 const SubcategoryRouter = require("./Routes/SubcategoryRouter")
 const ProductRouter = require("./Routes/ProductRoutes")
@@ -19,22 +22,42 @@ const PincodeRouter = require("./Routes/PincodeRouter");
 
 const app = express()
 
-// const corsOptions = {
-//     origin: 'http://localhost:3000',  // Frontend URL
-//     credentials: true,                // Allow cookies to be sent
-// };
+const allowedOrigins = [
+    'https://panchgavyamrit.com',
+    'https://www.panchgavyamrit.com',
+    'https://admin.panchgavyamrit.com',
+    'http://localhost:3000',
+    'http://localhost:3001'
+];
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true, // Allow cookies to be sent
+};
 
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 app.use(cors())
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+});
+
 
 app.use(cookieParser());
 
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 1050,
+    max: 100,
     message: "Too many requests from this IP, please try again later.",
     standardHeaders: true,
     legacyHeaders: false,
@@ -43,6 +66,7 @@ const limiter = rateLimit({
 app.use(limiter)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+
 app.use(helmet()); // Set secure HTTP headers
 app.use(mongoSanitize()); // Prevent NoSQL injection
 app.use(xss()); // Sanitize user input to prevent XSS
