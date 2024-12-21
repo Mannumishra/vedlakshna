@@ -14,7 +14,7 @@ const Header = () => {
 
   const logout = async () => {
     try {
-      const response = await axios.post('https://api.panchgavyamrit.com/log-out', { withCredentials: true });
+      const response = await axios.post('https://api.panchgavyamrit.com/api/log-out', { withCredentials: true });
       if (response.status === 200) {
         localStorage.clear();
         navigate('/login');
