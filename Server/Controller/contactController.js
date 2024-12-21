@@ -60,8 +60,8 @@ const createContact = async (req, res) => {
 
         // Email options for sending the email to the admin
         const mailOptions = {
-            from: process.env.USER,  // Sender's email (configured in environment variables)
-            to: process.env.USER,  // Replace with the admin's email address
+            from: "mannu22072000@gmail.com",  // Sender's email (configured in environment variables)
+            to: "mannu22072000@gmail.com",  // Replace with the admin's email address
             subject: 'New Contact Inquiry Received',
             html: emailContent,  // HTML content for the email
         };
@@ -88,7 +88,7 @@ const getAllContacts = async (req, res) => {
         const contacts = await Contact.find();
         res.status(200).json({
             success: true,
-            contacts : contacts.reverse(),
+            contacts: contacts.reverse(),
         });
     } catch (error) {
         console.error('Error fetching contacts:', error);
