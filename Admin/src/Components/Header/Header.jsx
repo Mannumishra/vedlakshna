@@ -19,7 +19,7 @@ const Header = () => {
         if (response.status === 200) {
             localStorage.clear(); // Clear all local storage data
             toast.success("Logout successful!"); // Added feedback for successful logout
-            navigate('/login'); // Redirect to login page
+            navigate('/log-in'); // Redirect to login page
         } else {
             toast.error(response.data.message || "Logout failed!");
         }

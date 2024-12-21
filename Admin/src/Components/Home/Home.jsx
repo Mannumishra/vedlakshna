@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 
 import Header from '../Header/Header'
 import Dashboard from '../../Pages/Dashboard/Dashboard'
@@ -90,7 +90,12 @@ const Home = () => {
           </div>
 
         </> :
-          <Login />
+          <Routes>
+            <Route path="/log-in" element={<Login />} />
+            {/* Redirect all other routes to Login */}
+            <Route path="*" element={<Navigate to="/log-in" />} />
+          </Routes>
+
       }
     </>
   )
