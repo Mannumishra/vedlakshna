@@ -54,7 +54,7 @@ const createRecord = async (req, res) => {
 
         // Send welcome email
         await transporter.sendMail({
-            from: process.env.USER,
+            from: "Panchgavya.amrit@gmail.com",
             to: email,
             subject: "Welcome to Vedhlakshna!",
             html: getWelcomeEmailTemplate(name)
@@ -190,5 +190,5 @@ const logout = async (req, res) => {
 
 
 module.exports = {
-    createRecord, getRecords, deleteRecord, login , getSingleRecords , logout,
+    createRecord, getRecords, deleteRecord, login, getSingleRecords, logout,
 }
