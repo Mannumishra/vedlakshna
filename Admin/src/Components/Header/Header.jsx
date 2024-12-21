@@ -10,9 +10,20 @@ const Header = () => {
     setSideToggle(!sidetoggle)
   }
 
-  const logout = () => {
-    localStorage.clear()
-  }
+  const logout = async () => {
+    try {
+      const response = await axios.post('https://api.panchgavyamrit.com/log-out', { withCredentials: true });
+      if (response.status === 200) {
+        localStorage.clear();
+        navigate('/login');
+      } else {
+        console.error('Logout failed:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
 
   const isActive = (path) => location.pathname.startsWith(path);
   return (
@@ -50,7 +61,7 @@ const Header = () => {
             <li className={isActive('/all-pincodes') || isActive("/add-pincode") || isActive("/edit-pincode") ? 'active' : ''}><Link to="/all-pincodes" onClick={handletoggleBtn}> <i class="fa-solid fa-location-dot"></i> Manage Pincode</Link></li>
             <li className={isActive('/all-users') ? 'active' : ''} ><Link to="/all-users" onClick={handletoggleBtn}> <i class="fa-solid fa-users"></i> All Users</Link></li>
 
-            <button className='logout mb-5'>Log Out <i class="fa-solid fa-right-from-bracket"></i></button>
+            <button className='logout mb-5' onClick={logout}>Log Out <i class="fa-solid fa-right-from-bracket"></i></button>
 
           </ul>
         </div>

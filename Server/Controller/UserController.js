@@ -165,6 +165,28 @@ const login = async (req, res) => {
     }
 };
 
+const logout = async (req, res) => {
+    try {
+        res.clearCookie('token', {
+            httpOnly: true,               // Prevent JavaScript access
+            secure: true,                 // Ensure cookie is sent over HTTPS
+            sameSite: 'None',             // Allow cross-site usage (if needed)
+            domain: '.panchgavyamrit.com' // Ensure it matches your domain
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Logout successful",
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Error logging out",
+        });
+    }
+};
+
 module.exports = {
-    createRecord, getRecords, deleteRecord, login , getSingleRecords
+    createRecord, getRecords, deleteRecord, login , getSingleRecords , logout,
 }
