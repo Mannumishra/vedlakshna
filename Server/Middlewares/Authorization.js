@@ -19,9 +19,9 @@ const protectAdmin = (req, res, next) => {
             return res.status(403).json({ success: false, message: "Access denied, admin only" });
         }
 
-        next(); 
+        next();
     } catch (error) {
-        console.error('Token verification error:', error); 
+        console.error('Token verification error:', error);
         if (error.name === 'TokenExpiredError') {
             return res.status(401).json({ success: false, message: "Token expired, please log in again" });
         }

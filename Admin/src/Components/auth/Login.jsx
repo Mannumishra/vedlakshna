@@ -12,19 +12,23 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('https://api.panchgavyamrit.com/api/log-in', { email, password }, { withCredentials: true });
-      if (response.status === 200) {
-        toast.success('Login successful!');
-        localStorage.setItem("login", true)
-        window.location.href = '/admin/dashboard';
-      } else {
-        toast.error(response.data.message || 'Something went wrong!');
-      }
+        const response = await axios.post(
+            'https://api.panchgavyamrit.com/api/log-in',
+            { email, password },
+            { withCredentials: true } // Ensure cookies are sent with the request
+        );
+        if (response.status === 200) {
+            toast.success('Login successful!');
+            localStorage.setItem("login", true); // Store login state locally
+            window.location.href = '/admin/dashboard'; // Redirect to dashboard
+        } else {
+            toast.error(response.data.message || 'Something went wrong!');
+        }
     } catch (error) {
-      console.log(error);
-      toast.error(error.response?.data?.message || 'Something went wrong!');
+        console.error("Login error:", error);
+        toast.error(error.response?.data?.message || 'Something went wrong!');
     }
-  };
+};
 
 
   return (
