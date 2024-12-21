@@ -93,7 +93,7 @@ const Products = () => {
       <section className="productsPage">
         <div className="container">
           <h1>
-            <b>Medicines</b>
+            {/* <b>Medicines</b> */}
           </h1>
           <div className="row">
             {/* Sidebar */}

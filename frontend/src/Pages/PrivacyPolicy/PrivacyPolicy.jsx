@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./PrivacyPolicy.css";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 const PrivacyPolicy = () => {
+  useEffect(()=>{
+    window.scrollTo({
+      top:0,
+      behavior:"smooth"
+    })
+  },[])
   return (
     <>
     <Helmet>

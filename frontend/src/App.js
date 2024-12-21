@@ -21,6 +21,7 @@ import DeliveryInformation from './Pages/DeliveryInformation/DeliveryInformation
 import PrivacyPolicy from './Pages/PrivacyPolicy/PrivacyPolicy'
 import Profile from './Pages/Profile/Profile'
 import ThankYouPage from './Pages/ThankYouPage/ThankYouPage'
+import PageNotFound from './Pages/PageNotFound/PageNotFound'
 const App = () => {
   return (
     <>
@@ -43,6 +44,7 @@ const App = () => {
           <Route path='/privacy-policy' element={<PrivacyPolicy />} />
           <Route path='/profile' element={<Profile />} />
           <Route path='/order-successfully' element={<ThankYouPage />} />
+          <Route path='/*' element={<PageNotFound />} />
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./checkout.css";
 import check from "../../images/check.gif";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import axios from "axios";
+import Swal from 'sweetalert2';
+
+
 const Checkout = () => {
   const userId = sessionStorage.getItem("userId")
   const [cartItems, setCartItems] = useState([]);
@@ -32,16 +35,50 @@ const Checkout = () => {
     calculateCartSummary(savedCartItems);
   }, []);
 
-  const calculateCartSummary = (cartItems) => {
+  useEffect(() => {
+    if (shippingAddress.postalCode) {
+      calculateCartSummary(cartItems);
+    }
+  }, [shippingAddress.postalCode, cartItems]);
+
+  // Recalculate total whenever subtotal or shipping changes
+  useEffect(() => {
+    if (subtotal && shipping !== null) {
+      setTotal(subtotal + shipping);
+    }
+  }, [subtotal, shipping]);
+
+  const calculateCartSummary = async (cartItems) => {
     let tempSubtotal = 0;
     cartItems.forEach(item => {
       tempSubtotal += item.price * item.quantity;
     });
     setSubtotal(tempSubtotal);
-    const tempShipping = tempSubtotal < 5000 ? 150 : 0;
-    setShipping(tempShipping);
-    setTotal(tempSubtotal + tempShipping);
+
+    const pincode = shippingAddress.postalCode;
+    if (pincode) {
+      try {
+        const response = await axios.get("https://api.panchgavyamrit.com/api/all-pincode");
+        console.log(response)
+        const pinCodeData = response.data.find(item => item.pincode === parseInt(pincode));
+        if (pinCodeData) {
+          console.log("Shipping charge for pincode:", pinCodeData.shippingCharge); // Check if the data is correct
+          setShipping(pinCodeData.shippingCharge);
+        } else {
+          setShipping(500); // Default shipping if pincode is not found
+        }
+      } catch (error) {
+        console.error("Error fetching shipping charge:", error);
+        setShipping(500); // Fallback shipping charge in case of an error
+      }
+    } else {
+      setShipping(500); // Default shipping if no pincode is provided
+    }
+
+    // Calculate total with shipping charge
+    setTotal(tempSubtotal + shipping);
   };
+
 
   const navigate = useNavigate();
   const [isPopupVisible, setIsPopupVisible] = useState(false);
@@ -56,62 +93,77 @@ const Checkout = () => {
 
   const handleConfirmOrder = async (event) => {
     event.preventDefault();
-    const checkoutData = {
-      userId: userId,
-      products: cartItems,
-      shippingAddress,
-      paymentMethod,
-    };
+    Swal.fire({
+      title: 'Confirm Your Order',
+      text: `For your pincode, the shipping charge is ₹${shipping}. Do you want to proceed with the order?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, Place Order',
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#F37254',
+      cancelButtonColor: '#d33',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const checkoutData = {
+          userId: userId,
+          products: cartItems,
+          shippingAddress,
+          paymentMethod,
+        };
 
-    try {
-      const res = await axios.post("https://api.panchgavyamrit.com/api/checkout", checkoutData);
-      console.log(res);
-      if (res.status === 201) {
-        if (paymentMethod === "Online") {
-          const { razorpayOrder } = res.data;
-          const options = {
-            key: "rzp_test_XPcfzOlm39oYi8",
-            amount: razorpayOrder.amount,
-            currency: "INR",
-            name: "VesLakshna Store",
-            description: "Checkout Payment",
-            order_id: razorpayOrder.id,
-            handler: async (response) => {
-              const verifyResponse = await axios.post("https://api.panchgavyamrit.com/api/payment/verify", {
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_signature: response.razorpay_signature,
-                order_id: res.data.checkout._id
-              });
+        try {
+          const res = await axios.post("https://api.panchgavyamrit.com/api/checkout", checkoutData);
+          console.log(res);
+          if (res.status === 201) {
+            if (paymentMethod === "Online") {
+              const { razorpayOrder } = res.data;
+              const options = {
+                key: "rzp_test_XPcfzOlm39oYi8",
+                amount: razorpayOrder.amount,
+                currency: "INR",
+                name: "VesLakshna Store",
+                description: "Checkout Payment",
+                order_id: razorpayOrder.id,
+                handler: async (response) => {
+                  const verifyResponse = await axios.post("https://api.panchgavyamrit.com/api/payment/verify", {
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_signature: response.razorpay_signature,
+                    order_id: res.data.checkout._id
+                  });
 
-              if (verifyResponse.status === 200) {
-                sessionStorage.removeItem("VesLakshna");
-                setIsPopupVisible(true);
-              } else {
-                alert("Payment verification failed");
-              }
-            },
-            prefill: {
-              name: shippingAddress.name,
-              email: shippingAddress.email,
-              contact: shippingAddress.phone,
-            },
-            theme: {
-              color: "#F37254", // Customize theme color
-            },
-          };
-          const rzp1 = new window.Razorpay(options);
-          rzp1.open();
-        } else {
-          sessionStorage.removeItem("VesLakshna");
-          setIsPopupVisible(true);
+                  if (verifyResponse.status === 200) {
+                    sessionStorage.removeItem("VesLakshna");
+                    setIsPopupVisible(true);
+                  } else {
+                    alert("Payment verification failed");
+                  }
+                },
+                prefill: {
+                  name: shippingAddress.name,
+                  email: shippingAddress.email,
+                  contact: shippingAddress.phone,
+                },
+                theme: {
+                  color: "#F37254", // Customize theme color
+                },
+              };
+              const rzp1 = new window.Razorpay(options);
+              rzp1.open();
+            } else {
+              sessionStorage.removeItem("VesLakshna");
+              setIsPopupVisible(true);
+            }
+          }
+        } catch (error) {
+          console.log("Error in order confirmation:", error);
         }
+      } else {
+        // Do nothing if the user cancels
+        console.log('Order cancelled');
       }
-    } catch (error) {
-      console.log("Error in order confirmation:", error);
-    }
+    });
   };
-
 
   const handleClosePopup = () => {
     setIsPopupVisible(false);
@@ -134,22 +186,22 @@ const Checkout = () => {
         <div className="container">
           <div className="row">
             <div className="col-md-6">
-              <a
-                to="/product/product-details"
+              <Link
+                to="/all-products"
                 className="back-icon text-decoration-none text-black d-flex align-items-center gap-2"
               >
                 <i className="bi bi-arrow-left text-black"></i> Back to category
-              </a>
+              </Link>
             </div>
             <div className="col-md-6">
               <div className="text-black d-flex justify-content-end gap-2">
-                <a className="text-black" to="/">
+                <Link className="text-black" to="/">
                   <i className="bi bi-house"></i>
-                </a>
+                </Link>
                 /
-                <a className="text-black" to="/product/product-details/cart">
+                <Link className="text-black" to="/cart">
                   Shoping Cart
-                </a>
+                </Link>
                 /
                 <a className="text-black" to="#">
                   Checkout

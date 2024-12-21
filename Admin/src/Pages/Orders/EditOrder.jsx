@@ -146,7 +146,7 @@ const EditOrder = () => {
                                         </tr>
                                         <tr>
                                             <th scope="row">Transaction Id</th>
-                                            <td>{order.paymentInfo.transactionId}</td>
+                                            <td>{order?.paymentInfo?.transactionId}</td>
                                         </tr>
 
                                         <tr>
@@ -194,7 +194,7 @@ const EditOrder = () => {
                     </div>
                 </div>
                 <div className="">
-                    <button className="btn btn-primary" onClick={handleUpdate} style={{backgroundColor:"#F58634 !impotant"}}>
+                    <button className="btn btn-primary" onClick={handleUpdate} style={{ backgroundColor: "#F58634 !impotant" }}>
                         Save Changes
                     </button>
                 </div>

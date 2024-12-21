@@ -4,15 +4,15 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 
 const About = () => {
-  useEffect(()=>{
+  useEffect(() => {
     window.scrollTo({
-        top:0,
-        behavior:'smooth'
+      top: 0,
+      behavior: 'smooth'
     })
-},[]);
+  }, []);
   return (
     <>
-     <Helmet>
+      <Helmet>
         <title>About Us - Shri Godham Mahatirtha Pathmeda</title>
         <meta
           name="description"

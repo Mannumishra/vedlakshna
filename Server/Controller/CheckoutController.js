@@ -1,6 +1,7 @@
 const Checkout = require("../Models/CheckoutModel");
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
+const axios = require("axios")
 
 const razorpayInstance = new Razorpay({
     key_id: 'rzp_test_XPcfzOlm39oYi8',
@@ -10,8 +11,22 @@ const razorpayInstance = new Razorpay({
 exports.checkout = async (req, res) => {
     console.log(req.body)
     const { userId, products, shippingAddress, paymentMethod } = req.body;
+
+    const pincode = shippingAddress.postalCode;
     const subtotal = products.reduce((total, item) => total + (item.price * item.quantity), 0);
-    const shippingCost = subtotal < 5000 ? 150 : 0;
+    let shippingCost = 500;
+    if (pincode) {
+        try {
+            const response = await axios.get("https://api.panchgavyamrit.com/api/all-pincode");
+            const pinCodeData = response.data.find(item => item.pincode === parseInt(pincode));
+            if (pinCodeData) {
+                shippingCost = pinCodeData.shippingCharge;
+            }
+        } catch (error) {
+            console.error("Error fetching shipping charge:", error);
+        }
+    }
+
     const totalAmount = subtotal + shippingCost;
     try {
         const checkout = new Checkout({
@@ -189,7 +204,7 @@ exports.getorderByUserID = async (req, res) => {
         res.status(200).json({
             success: true,
             message: "Order Found Successfully",
-            data: data
+            data: data.reverse()
         })
     } catch (error) {
         console.log(error)

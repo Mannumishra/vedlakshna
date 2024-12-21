@@ -19,10 +19,10 @@ const Footer = () => {
           <div className="footer-section">
             {/* <h4>About Us</h4> */}
             <div>
-            <img className="w-50 mb-3" src={logo} alt="" />
+              <img className="w-50 mb-3" src={logo} alt="" />
             </div>
             <p>
-              Discover the best deals and quality products at our store. We bring premium 
+              Discover the best deals and quality products at our store. We bring premium
               e-commerce services to your fingertips.
             </p>
             <p>Monday - Friday: 8:00 AM - 9:00 PM</p>
@@ -74,10 +74,22 @@ const Footer = () => {
 
         {/* Footer Bottom Section */}
         <div className="footer-bottom">
-          <p>&copy; 2024 Your Store | Powered by Digi India Solution</p>
+          <p>
+            &copy; 2024 Your Store. All Rights Reserved. | Designed & Powered by{" "}
+            <a
+              href="https://digiindiasolutions.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: "#F58634", textDecoration: "none" }}
+            >
+              Digi India Solutions
+            </a>
+          </p>
+
+
           <ul>
             <li>
-              <Link to="/about">About Us</Link>
+              <Link to="/about-us">About Us</Link>
             </li>
             <li>
               <Link to="/career">Career</Link>
