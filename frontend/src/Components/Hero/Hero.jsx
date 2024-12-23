@@ -66,6 +66,9 @@ const Hero = () => {
         [productId]: {
           weight: productWeight,
           price: productInfo.productFinalPrice,
+          originalPrice: productInfo.productPrice,
+          discountPercentage: productInfo.productDiscountPercentage,
+          stock: productInfo.stock,
         },
       }));
     }
@@ -80,12 +83,12 @@ const Hero = () => {
       });
       return;
     }
+    const { weight, price, stock } = selectedWeights[productId];
     // Navigate to product details page with the selected weight and price
     navigate(
-      `/product/product-details/${productId}?weight=${selectedWeights[productId].weight}&price=${selectedWeights[productId].price}`
+      `/product/product-details/${productId}?weight=${weight}&price=${price}&stock=${stock}`
     );
-  };
-
+  }
 
   const handleScroll = () => {
     const section = document.getElementById("stats-section");
@@ -316,24 +319,47 @@ const Hero = () => {
                 products.map((product, index) => (
                   <div key={index}>
                     <div className="product-card">
-                      <Link to={"/product/product-details"}>
-                        <div className="product-image">
-                          <img src={product.productImage[0]}
-                            alt={product.productName} />
+                      {/* <Link to={"/product/product-details"}> */}
+                      <div className="product-image">
+                        <img src={product.productImage[0]}
+                          alt={product.productName} />
+                      </div>
+                      <div className="productName">
+                        <h3 className="product-title">
+                          {truncateText(product.productName, 3)}
+                          {/* {product.productName} */}
+                        </h3>
+                        <div className="price text-end">
+                          {selectedWeights[product._id] ? (
+                            <>
+                              <span className="current-price">
+                                <del>&#8377; {selectedWeights[product._id]?.originalPrice}</del>
+                              </span> <br />
+                              <span className="original-price">
+                                Off {selectedWeights[product._id]?.discountPercentage}%
+                              </span> <br />
+                              <span className="current-price">
+                                &#8377; {selectedWeights[product._id]?.price}
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="current-price">
+                                <del>&#8377; {product.productInfo[0].productPrice}</del>
+                              </span> <br />
+                              <span className="original-price">
+                                Off {product.productInfo[0].productDiscountPercentage}%
+                              </span> <br />
+                              <span className="current-price">
+                                &#8377; {product.productInfo[0].productFinalPrice}
+                              </span>
+                            </>
+                          )}
                         </div>
-                        <div className="productName">
-                          <h3 className="product-title">
-                            {product.productName}
-                          </h3>
-                          <div className="price">
-                            <span className="current-price">&#8377; {selectedWeights[product._id]?.price ||
-                              product.productInfo[0].productFinalPrice}</span>
-                            <br />
-                            <span className="original-price">Off {selectedWeights[product._id]?.price ||
-                              product.productInfo[0].productDiscountPercentage} %</span>
-                          </div>
-                        </div>
-                      </Link>
+
+                      </div>
+                      {/* </Link> */}
+
 
                       <label htmlFor={`pot-${product._id}`} className="pot-label">
                         *Weight:

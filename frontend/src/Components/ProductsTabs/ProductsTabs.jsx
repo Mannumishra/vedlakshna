@@ -101,7 +101,7 @@ const ProductsTabs = () => {
 
     if (selectedProductInfo) {
       navigate(
-        `/product/product-details/${productId}?weight=${selectedWeight}&price=${selectedProductInfo.productFinalPrice}`
+        `/product/product-details/${productId}?weight=${selectedWeight}&price=${selectedProductInfo.productFinalPrice}&stock=${selectedProductInfo.stock}`
       );
     } else {
       Swal.fire({
@@ -111,6 +111,15 @@ const ProductsTabs = () => {
       });
     }
   };
+
+
+  function truncateText(text, wordLimit) {
+    const words = text.split(" ");
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(" ") + "...";
+    }
+    return text;
+  }
 
 
   return (
@@ -124,7 +133,7 @@ const ProductsTabs = () => {
             </h2>
           </div>
           <div className="tabs">
-            {categories.map((category) => (
+            {categories.slice(0, 3).map((category) => (
               <button
                 key={category._id}
                 className={`tab-button ${activeTab === category._id ? "active" : ""}`}
@@ -149,22 +158,32 @@ const ProductsTabs = () => {
                 return (
                   <div key={product._id}>
                     <div className="product-card">
-                      <Link to={"/product/product-details"}>
-                        <div className="product-image">
-                          <img
-                            src={product.productImage[0]}
-                            alt={`Product ${index + 1}`}
-                          />
-                        </div>
-                        <div className="productName">
-                          <h3 className="product-title">{product.productName}</h3>
-                          <div className="price">
-                            <span className="current-price">
-                              ₹ {selectedProductInfo?.productFinalPrice || "0.00"}
+                      {/* <Link to={"/product/product-details"}> */}
+                      <div className="product-image">
+                        <img
+                          src={product.productImage[0]}
+                          alt={`Product ${index + 1}`}
+                        />
+                      </div>
+                      <div className="productName">
+                        <h3 className="product-title">{truncateText(product.productName, 3)}</h3>
+                        <div className="price text-end">
+                          <span className="current-price">
+                            <del>  ₹ {selectedProductInfo?.productPrice || "0.00"}</del>
+                          </span> <br />
+                          {selectedProductInfo?.productDiscountPercentage && (
+                            <span className="discount-price text-danger">
+                              Off {selectedProductInfo.productDiscountPercentage} %
                             </span>
-                          </div>
+                          )} <br />
+                          {selectedProductInfo?.productFinalPrice && (
+                            <span className="current-price">
+                              ₹ {selectedProductInfo.productFinalPrice}
+                            </span>
+                          )}
                         </div>
-                      </Link>
+                      </div>
+                      {/* </Link> */}
                       <label
                         htmlFor={`pot-${product._id}`}
                         className="pot-label"

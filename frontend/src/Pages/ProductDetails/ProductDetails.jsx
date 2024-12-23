@@ -17,6 +17,7 @@ const ProductDetails = () => {
   const queryParams = new URLSearchParams(location.search);
   const weight = queryParams.get('weight');
   const price = queryParams.get('price');
+  const stock = queryParams.get('stock');
 
   const [quantity, setQuantity] = useState(1);
   const [currentImage, setCurrentImage] = useState(""); // For tracking the selected image
@@ -42,7 +43,6 @@ const ProductDetails = () => {
 
     window.scrollTo({
       top: 0,
-      behavior: "smooth"
     })
   }, [id, weight]);
 
@@ -118,7 +118,7 @@ const ProductDetails = () => {
                 <Link className="text-black" to="/">
                   <i className="bi bi-house"></i>
                 </Link>
-                <Link className="text-black" to="#">
+                <Link className="text-black breadSpan" to="#">
                   {productDetails.productName}
                 </Link>
               </div>
@@ -140,9 +140,9 @@ const ProductDetails = () => {
                 <i className="bi bi-star"></i>
               </div>
               <div className="product-details-content">
-                <h5>
+                {/* <h5>
                   <Link to="#">{productDetails.productName}</Link>
-                </h5>
+                </h5> */}
                 <h1>{productDetails.productName}</h1>
                 <p>
                   <b>Product Details:</b>
@@ -153,7 +153,7 @@ const ProductDetails = () => {
                     <b>Category:</b><span style={{ textTransform: "capitalize" }}> {productDetails.categoryName.categoryName}</span>
                   </li>
                   <li>
-                    <b>Availability:</b> {productDetails.productInfo[0].stock === "Available" ? "In Stock" : "Out of Stock"}
+                    <b>Availability:</b> {stock === "Available" ? "In Stock" : "Out of Stock"}
                   </li>
                   <li>
                     <b>Weight:</b> {weight}
@@ -174,12 +174,20 @@ const ProductDetails = () => {
                     &nbsp;
                   </li>
                   <li>
-                    <button
-                      className="add-to-cart" onClick={addToCart}
-                    >
-                      Add To Cart <i className="bi bi-cart"></i>
-                    </button>
+                    {stock === "Available" ? (
+                      <button
+                        className="add-to-cart"
+                        onClick={addToCart}
+                      >
+                        Add To Cart <i className="bi bi-cart"></i>
+                      </button>
+                    ) : (
+                      <p className="out-of-stock-message">
+                        This product is currently out of stock.
+                      </p>
+                    )}
                   </li>
+
                 </ul>
               </div>
             </div>
@@ -230,31 +238,12 @@ const ProductDetails = () => {
                       Description
                     </Link>
                   </li>
-                  {/* <li className="nav-item">
-                    <Link
-                      className="product-details-description-button"
-                      id="tab2"
-                      data-bs-toggle="tab"
-                      to="#2a"
-                    >
-                      Review
-                    </Link>
-                  </li> */}
                 </ul>
 
                 <div className="tab-content mt-3">
                   <div className="tab-pane active" id="1a">
                     <div dangerouslySetInnerHTML={{ __html: productDetails.productDescription }} />
                   </div>
-
-                  {/* <div className="tab-pane" id="2a">
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Quam cumque, officia vel velit molestias alias dolorum
-                      ipsa accusantium delectus eligendi corrupti praesentium
-                      aut in officiis maxime optio, iste pariatur inventore?
-                    </p>
-                  </div> */}
                 </div>
               </div>
             </div>

@@ -9,14 +9,33 @@ import Swal from 'sweetalert2';
 
 const Checkout = () => {
   const userId = sessionStorage.getItem("userId")
+  const [userData, setUserData] = useState({})
   const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [shipping, setShipping] = useState(0);
   const [total, setTotal] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("Online");
+
+
+  const getApiData = async () => {
+    try {
+      const res = await axios.get("https://api.panchgavyamrit.com/api/get-user/" + userId)
+      console.log(res)
+      if (res.status === 200) {
+        setUserData(res.data.data)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getApiData()
+  }, [])
+
   const [shippingAddress, setShippingAddress] = useState({
-    name: "",
-    email: "",
+    name: userData.name,
+    email: userData.email,
     phone: "",
     address: "",
     city: "",
@@ -24,6 +43,17 @@ const Checkout = () => {
     country: "",
     postalCode: ""
   });
+
+  useEffect(() => {
+    if (userData.name && userData.email) {
+      setShippingAddress((prevState) => ({
+        ...prevState,
+        name: userData.name,
+        email: userData.email,
+      }));
+    }
+  }, [userData]);
+
 
   useEffect(() => {
     window.scrollTo({
@@ -90,6 +120,7 @@ const Checkout = () => {
       [name]: value,
     }));
   };
+
 
   const handleConfirmOrder = async (event) => {
     event.preventDefault();
@@ -223,7 +254,7 @@ const Checkout = () => {
                 <hr />
                 {/* <form> */}
                 <div className="row">
-                  <div className="col-md-12">
+                  {/* <div className="col-md-12">
                     <div className="form-group">
                       <label htmlFor="name">Name *</label>
                       <input type="text" id="name" name="name" value={shippingAddress.name} onChange={handleInputChange} required />
@@ -234,43 +265,43 @@ const Checkout = () => {
                       <label htmlFor="name">Email *</label>
                       <input type="email" id="email" name="email" value={shippingAddress.email} onChange={handleInputChange} required />
                     </div>
-                  </div>
-                  <div className="col-md-6">
+                  </div> */}
+                  <div className="col-md-12">
                     <div className="form-group">
                       <label htmlFor="phone">Phone</label>
-                      <input type="number" id="phone" name="phone" value={shippingAddress.phone} onChange={handleInputChange} required />
+                      <input type="number" id="phone" name="phone" value={shippingAddress.phone} onChange={handleInputChange} required placeholder="Phone Number" />
                     </div>
                   </div>
                   <div className="col-md-12">
                     <div className="form-group">
                       <label htmlFor="address">Address *</label>
-                      <input type="text" id="address" name="address" value={shippingAddress.address} onChange={handleInputChange} required />
+                      <input type="text" id="address" name="address" value={shippingAddress.address} onChange={handleInputChange} required placeholder="Address" />
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label htmlFor="city">City *</label>
-                      <input type="text" id="city" name="city" value={shippingAddress.city} onChange={handleInputChange} required />
+                      <input type="text" id="city" name="city" value={shippingAddress.city} onChange={handleInputChange} required placeholder="City" />
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label htmlFor="state">State *</label>
-                      <input type="text" id="state" name="state" value={shippingAddress.state} onChange={handleInputChange} required />
+                      <input type="text" id="state" name="state" value={shippingAddress.state} onChange={handleInputChange} required placeholder="State" />
                     </div>
                   </div>
 
                   <div className="col-md-6">
                     <div className="form-group">
                       <label htmlFor="country">Country *</label>
-                      <input type="text" id="country" name="country" value={shippingAddress.country} onChange={handleInputChange} required />
+                      <input type="text" id="country" name="country" value={shippingAddress.country} onChange={handleInputChange} required placeholder="Country" />
                     </div>
                   </div>
 
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label htmlFor="postalCode">Postal Code</label>
-                      <input type="text" id="postalCode" name="postalCode" value={shippingAddress.postalCode} onChange={handleInputChange} />
+                      <label htmlFor="postalCode">Pin Code</label>
+                      <input type="text" id="postalCode" name="postalCode" value={shippingAddress.postalCode} onChange={handleInputChange} placeholder="Pin Code" />
                     </div>
                   </div>
                 </div>

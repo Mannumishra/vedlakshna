@@ -238,9 +238,9 @@
   .header-card-option {
     display: none !important;
   }
-  /* .main-header{
-    padding: 5px 0px;
-  } */
+  .main-header{
+    padding: 0px;
+  }
   .desktopHeaderTop{
     display: none;
   }

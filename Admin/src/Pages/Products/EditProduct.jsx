@@ -89,8 +89,20 @@ const EditProduct = () => {
         const { name, value } = e.target;
         const updatedProductInfo = [...formData.productInfo];
         updatedProductInfo[index][name] = value;
+    
+        // If the price or discount percentage changes, calculate the final price
+        if (name === 'productPrice' || name === 'productDiscountPercentage') {
+            const price = parseFloat(updatedProductInfo[index].productPrice) || 0;
+            const discountPercentage = parseFloat(updatedProductInfo[index].productDiscountPercentage) || 0;
+            const finalPrice = price - (price * discountPercentage / 100);
+    
+            // Update the final price in the form data
+            updatedProductInfo[index].productFinalPrice = finalPrice.toFixed(2); // You can set the precision you prefer
+        }
+    
         setFormData({ ...formData, productInfo: updatedProductInfo });
     };
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();

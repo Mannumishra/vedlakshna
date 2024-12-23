@@ -15,14 +15,14 @@ const Header = () => {
     setSearch(!search);
   };
 
-  const loginValue = sessionStorage.getItem("Login")
+  const loginValue = sessionStorage.getItem("Login");
   return (
     <>
       {/* Top Header Section */}
       <section className="headerTop">
         <div className="container">
           <div className="row desktopHeaderTop align-items-center">
-            <div className="col-md-4">
+            <div className="col-md-3">
               <div className="top-header-main">
                 <ul className="list-unstyled d-flex gap-3">
                   <li>
@@ -38,27 +38,37 @@ const Header = () => {
                 </ul>
               </div>
             </div>
-            <div className="col-md-4 text-center">
-              <div className="top-header-time">
-                <p aria-label="Operating hours">
-                  Monday - Friday: 8:00 AM - 9:00 PM
-                </p>
-              </div>
+            <div className="col-md-6 text-center">
+              <marquee
+                behavior="smooth"
+                style={{ color: "var(--themeColor)" }}
+                direction=""
+              >
+                श्री गोधाम महातीर्थ पथमेड़ा गोशाला का अधिकृत ऑनलाइन स्टोर
+                (पथमेड़ा गोशाला के गौ उत्पाद केवल वेदलक्षणा ब्रांड नाम से ही
+                उपलब्ध हैं। अन्य किसी नाम से गोशाला का संबंध नहीं है।)
+              </marquee>
             </div>
-            <div className="col-md-4 text-end">
+            <div className="col-md-3 text-end">
               <div className="top-header-search">
                 <p onClick={searchbarToggle} style={{ cursor: "pointer" }}>
                   <i className="bi bi-search" aria-hidden="true"></i> Search
                 </p>
-                {
-                  loginValue ?
-                    <button onClick={(() => navigate('/profile'))} className="btn btn-primary">
-                      <i className="bi bi-person" aria-hidden="true"></i> Profile
-                    </button> :
-                    <button onClick={(() => navigate('/register'))} className="btn btn-primary">
-                      <i className="bi bi-person" aria-hidden="true"></i> Register
-                    </button>
-                }
+                {loginValue ? (
+                  <button
+                    onClick={() => navigate("/profile")}
+                    className="btn btn-primary"
+                  >
+                    <i className="bi bi-person" aria-hidden="true"></i> Profile
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => navigate("/register")}
+                    className="btn btn-primary"
+                  >
+                    <i className="bi bi-person" aria-hidden="true"></i> Register
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -81,7 +91,6 @@ const Header = () => {
             </div>
           </div>
 
-
           {search ? (
             <div className="global-search">
               <input
@@ -100,7 +109,7 @@ const Header = () => {
         <div className="container">
           <div className="row align-items-center">
             <div className="col-md-2 col-6">
-              <Link to={'/'}>
+              <Link to={"/"}>
                 <img
                   style={{ objectFit: "cover" }}
                   src={logo}
@@ -177,21 +186,20 @@ const Header = () => {
           </button>
         </div>
         <ul className="list-unstyled">
-          <li>
+          <li onClick={toggleSidebar}>
             <Link to="/">Home</Link>
           </li>
-          <li>
+          <li onClick={toggleSidebar}>
             <Link to="/about-us">About Us</Link>
           </li>
-          <li>
+          <li onClick={toggleSidebar}>
             <Link to="/contact-us">Contact Us</Link>
           </li>
-          <li>
+          <li onClick={toggleSidebar}>
             <Link to="/all-products">Products</Link>
           </li>
         </ul>
       </aside>
-
     </>
   );
 };

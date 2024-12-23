@@ -73,4 +73,11 @@ body {
     font-size: 12px;
     font-weight: 500;
   }
+  .minibreadCrumb{
+    margin-bottom: 1rem;
+  }
+  .breadSpan{
+    font-size: 12px;
+  }
 }
+

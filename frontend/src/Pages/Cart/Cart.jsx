@@ -7,9 +7,10 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
+  const loginValue = sessionStorage.getItem("Login")
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, });
 
     // Retrieve the cart data from sessionStorage
     const storedCart = JSON.parse(sessionStorage.getItem("VesLakshna")) || [];
@@ -43,6 +44,14 @@ const Cart = () => {
     return cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
   };
 
+    // Function to handle checkout redirect
+    const handleCheckout = () => {
+      if (loginValue) {
+        navigate("/product/product-details/cart/checkout");
+      } else {
+        navigate("/login", { state: { from: "/product/product-details/cart/checkout" } });
+      }
+    };
   return (
     <>
       <Helmet>
@@ -64,7 +73,7 @@ const Cart = () => {
                   <i className="bi bi-house"></i>
                 </Link>
                 /
-                <Link className="text-black" to="#">
+                <Link className="text-black breadSpan" to="#">
                   Shopping Cart
                 </Link>
               </div>
@@ -82,7 +91,7 @@ const Cart = () => {
                   <th>Image</th>
                   <th>Product Name</th>
                   <th>Weight</th>
-                  <th>Quantity</th>
+                  <th scope="row">Quantity</th>
                   <th>Unit Price</th>
                   <th>Total</th>
                   <th>Delete</th>
@@ -91,22 +100,22 @@ const Cart = () => {
               <tbody>
                 {cartItems.length > 0 ? (
                   cartItems.map((item, index) => (
-                    <tr key={item.productId}>
+                    <tr  key={item.productId}>
                       <td className="text-center">
                         <img src={item.productImage} alt="Product" width="100" />
                       </td>
                       <td>{item.productName}</td>
                       <td>{item.weight}</td>
-                      <td>
+                      <td className="quantity-td">
                         <button
-                          className="btn btn-outline-primary btn-sm mx-1"
+                          className="btn btn-outline-primary btn-sm mx-2"
                           onClick={() => updateQuantity("decrement", index)}
                         >
                           -
                         </button>
-                        <span className="mx-2">{item.quantity}</span>
+                        <span>{item.quantity}</span>
                         <button
-                          className="btn btn-outline-primary btn-sm mx-1"
+                          className="btn btn-outline-primary btn-sm mx-2"
                           onClick={() => updateQuantity("increment", index)}
                         >
                           +
@@ -146,7 +155,7 @@ const Cart = () => {
             <button onClick={() => navigate("/all-products")} className="add-to-cart">
               Continue Shopping
             </button> &nbsp;
-            <button onClick={() => navigate("/product/product-details/cart/checkout")} className="add-to-cart">
+            <button onClick={handleCheckout} className="add-to-cart">
               Checkout
             </button>
           </div>

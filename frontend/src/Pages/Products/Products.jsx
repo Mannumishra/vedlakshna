@@ -61,6 +61,9 @@ const Products = () => {
         [productId]: {
           weight: productWeight,
           price: productInfo.productFinalPrice,
+          originalPrice: productInfo.productPrice,
+          discountPercentage: productInfo.productDiscountPercentage,
+          stock: productInfo.stock,
         },
       }));
     }
@@ -77,7 +80,7 @@ const Products = () => {
     }
     // Navigate to product details page with the selected weight and price
     navigate(
-      `/product/product-details/${productId}?weight=${selectedWeights[productId].weight}&price=${selectedWeights[productId].price}`
+      `/product/product-details/${productId}?weight=${selectedWeights[productId].weight}&price=${selectedWeights[productId].price}&stock=${selectedWeights[productId].stock}`
     );
   };
 
@@ -92,9 +95,6 @@ const Products = () => {
       </Helmet>
       <section className="productsPage">
         <div className="container">
-          <h1>
-            {/* <b>Medicines</b> */}
-          </h1>
           <div className="row">
             {/* Sidebar */}
             <div className="col-md-3 productSidebar">
@@ -131,6 +131,15 @@ const Products = () => {
                       <div className="productName">
                         <h3 className="product-title">{product.productName}</h3>
                         <div className="price">
+                          <span className="current-price">
+                            <del> &#8377;
+                              {selectedWeights[product._id]?.originalPrice ||
+                                product.productInfo[0].productPrice}</del>
+                          </span> <br />
+                          <span className="current-price text-danger">
+                            Off {selectedWeights[product._id]?.discountPercentage ||
+                              product.productInfo[0].productDiscountPrice} %
+                          </span> <br />
                           <span className="current-price">
                             &#8377;
                             {selectedWeights[product._id]?.price ||

@@ -22,6 +22,7 @@ import PrivacyPolicy from './Pages/PrivacyPolicy/PrivacyPolicy'
 import Profile from './Pages/Profile/Profile'
 import ThankYouPage from './Pages/ThankYouPage/ThankYouPage'
 import PageNotFound from './Pages/PageNotFound/PageNotFound'
+import ReturnRefund from './Pages/ReturnRefund/ReturnRefund'
 const App = () => {
   return (
     <>
@@ -45,6 +46,8 @@ const App = () => {
           <Route path='/profile' element={<Profile />} />
           <Route path='/order-successfully' element={<ThankYouPage />} />
           <Route path='/*' element={<PageNotFound />} />
+          <Route path="/return-refund" element={<ReturnRefund />} />
+
         </Routes>
         <Footer />
       </BrowserRouter>

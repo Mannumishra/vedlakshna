@@ -66,8 +66,21 @@ const AddProduct = () => {
         const { name, value } = e.target;
         const updatedProductInfo = [...formData.productInfo];
         updatedProductInfo[index][name] = value;
+
+        // Automatically calculate final price if price or discount percentage is updated
+        if (name === 'productPrice' || name === 'productDiscountPercentage') {
+            const price = updatedProductInfo[index].productPrice;
+            const discountPercentage = updatedProductInfo[index].productDiscountPercentage;
+
+            if (price && discountPercentage !== '') {
+                const finalPrice = price - (price * (discountPercentage / 100));
+                updatedProductInfo[index].productFinalPrice = finalPrice.toFixed(2); // Round to 2 decimal places
+            }
+        }
+
         setFormData({ ...formData, productInfo: updatedProductInfo });
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();

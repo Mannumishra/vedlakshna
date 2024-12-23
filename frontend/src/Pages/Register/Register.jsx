@@ -12,45 +12,52 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const Register = () => {
-  const navigate = useNavigate()
-  const [cPass, setCpass] = useState("")
+  const navigate = useNavigate();
+  const [cPass, setCpass] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [data, setData] = useState({
     name: "",
     email: "",
-    password: ""
-  })
+    password: "",
+  });
 
   const getinputData = (e) => {
-    const { name, value } = e.target
-    setData({ ...data, [name]: value })
-  }
+    const { name, value } = e.target;
+    setData({ ...data, [name]: value });
+  };
+
   const postData = async (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
+    e.preventDefault();
 
     try {
       if (data.password === cPass) {
-        const res = await axios.post("https://api.panchgavyamrit.com/api/signup", data);
+        const res = await axios.post(
+          "https://api.panchgavyamrit.com/api/signup",
+          data
+        );
         if (res.status === 201) {
           Swal.fire({
-            icon: 'success',
-            title: 'Registration Successful!',
-            text: 'You have successfully registered.',
+            icon: "success",
+            title: "Registration Successful!",
+            text: "You have successfully registered.",
           });
-          navigate("/login")
+          navigate("/login");
         }
       } else {
         Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed!',
-          text: 'Passwords do not match. Please try again.',
+          icon: "error",
+          title: "Registration Failed!",
+          text: "Passwords do not match. Please try again.",
         });
       }
     } catch (error) {
       console.log(error);
       Swal.fire({
-        icon: 'error',
-        title: 'Registration Failed!',
-        text: error.response?.data?.message || 'There was an issue with your registration. Please try again.',
+        icon: "error",
+        title: "Registration Failed!",
+        text:
+          error.response?.data?.message ||
+          "There was an issue with your registration. Please try again.",
       });
     }
   };
@@ -58,9 +65,9 @@ const Register = () => {
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
     });
   }, []);
+
   return (
     <>
       <Helmet>
@@ -81,34 +88,66 @@ const Register = () => {
                 <form onSubmit={postData}>
                   <div className="register-field">
                     <img src={men} alt="Name Icon" />
-                    <input type="text" name="name" placeholder="Your Name" onChange={getinputData} />
-                  </div>
-                  <div className="register-field">
-                    <img src={mail} alt="Email Icon" />
-                    <input type="text" name="email" placeholder="Your Email" onChange={getinputData} />
-                  </div>
-                  <div className="register-field">
-                    <img src={password} alt="Password Icon" />
                     <input
-                      type="password"
-                      name="password"
-                      placeholder="Password"
+                      type="text"
+                      name="name"
+                      placeholder="Your Name"
                       onChange={getinputData}
                     />
                   </div>
                   <div className="register-field">
+                    <img src={mail} alt="Email Icon" />
+                    <input
+                      type="text"
+                      name="email"
+                      placeholder="Your Email"
+                      onChange={getinputData}
+                    />
+                  </div>
+                  <div className="register-field password-field">
+                    <img src={password} alt="Password Icon" />
+                    <input
+                      type={showPassword ? "text" : "password"} // Toggle between text and password
+                      name="password"
+                      placeholder="Password"
+                      onChange={getinputData}
+                    />
+                    <span
+                      className="password-toggle-icon"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <i class="bi bi-eye"></i>
+                      ) : (
+                        <i class="bi bi-eye-slash-fill"></i>
+                      )}{" "}
+                      {/* Icons for hide/show */}
+                    </span>
+                  </div>
+                  <div className="register-field">
                     <img src={repeatPassword} alt="Repeat Password Icon" />
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       name="repeat-password"
                       placeholder="Repeat Password"
                       onChange={(e) => setCpass(e.target.value)}
                     />
+                    <span
+                      className="password-toggle-icon"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <i class="bi bi-eye"></i>
+                      ) : (
+                        <i class="bi bi-eye-slash-fill"></i>
+                      )}{" "}
+                      {/* Icons for hide/show */}
+                    </span>
                   </div>
-                  <div className="terms">
+                  {/* <div className="terms">
                     <input type="checkbox" name="terms" />
                     <label>I agree to all statements in Terms of service</label>
-                  </div>
+                  </div> */}
                   <div className="register-button">
                     <button type="submit">Register</button>
                   </div>
