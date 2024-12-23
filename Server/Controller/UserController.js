@@ -2,6 +2,7 @@ const User = require("../Models/UserModel");
 const { transporter } = require("../utils/Nodemailer");
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const crypto = require("crypto")
 
 // HTML email template
 const getWelcomeEmailTemplate = (name) => `
@@ -188,7 +189,129 @@ const logout = async (req, res) => {
     }
 };
 
+// HTML email template for password reset
+const getPasswordResetEmailTemplate = (name, resetLink) => `
+    <div style="font-family: Arial, sans-serif; margin: 0; padding: 0; width: 100%; background-color: #F7F7F7;">
+        <table style="max-width: 600px; margin: 50px auto; background: #FFFFFF; border: 1px solid #E8E8E8; border-radius: 10px;">
+            <tr>
+                <td style="background: #F58634; padding: 20px; text-align: center;">
+                    <h1 style="color: #FFFFFF; font-size: 24px;">Password Reset Request</h1>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px;">
+                    <h2 style="color: #333333; font-size: 20px; margin-bottom: 10px;">Hello ${name},</h2>
+                    <p style="color: #555555; font-size: 16px; line-height: 1.5; margin: 0;">
+                        We received a request to reset your password. If you requested this change, click the link below to reset your password:
+                    </p>
+                    <p style="color: #555555; font-size: 16px; line-height: 1.5; margin: 20px 0;">
+                        <a href="${resetLink}" style="color: #F58634; text-decoration: none; font-size: 16px;">Reset Password</a>
+                    </p>
+                    <p style="color: #555555; font-size: 14px; line-height: 1.5; margin: 0;">
+                        If you did not request this, please ignore this email.
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 20px;">
+                    <p style="color: #555555; font-size: 14px; line-height: 1.5; margin: 0;">
+                        Best regards,<br>
+                        <strong>The Vedhlakshna Team</strong>
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+`;
+
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "No user found with this email.",
+            });
+        }
+
+        // Generate a password reset token
+        const resetToken = crypto.randomBytes(32).toString('hex');
+        const resetTokenExpiration = Date.now() + 3600000; // Token valid for 1 hour
+
+        // Update the user record with reset token and expiration
+        user.resetToken = resetToken;
+        user.resetTokenExpiration = resetTokenExpiration;
+        await user.save();
+
+        // Generate the reset link
+        const resetLink = `https://panchgavyamrit.com/reset-password/${resetToken}`;
+
+        // Send password reset email
+        await transporter.sendMail({
+            from: "Panchgavya.amrit@gmail.com",
+            to: email,
+            subject: "Password Reset Request",
+            html: getPasswordResetEmailTemplate(user.name, resetLink),
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "Password reset email sent successfully.",
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Error sending password reset email.",
+        });
+    }
+};
+
+
+const resetPassword = async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    try {
+        const user = await User.findOne({
+            resetToken: token,
+            resetTokenExpiration: { $gt: Date.now() }, // Token must be valid
+        });
+
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid or expired reset token.",
+            });
+        }
+
+        // Hash the new password
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+        // Update user's password and clear reset token
+        user.password = hashedPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpiration = undefined;
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Password has been successfully reset.",
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            success: false,
+            message: "Error resetting password.",
+        });
+    }
+};
+
+
+
+
 
 module.exports = {
-    createRecord, getRecords, deleteRecord, login, getSingleRecords, logout,
+    createRecord, getRecords, deleteRecord, login, getSingleRecords, logout, resetPassword, forgotPassword
 }

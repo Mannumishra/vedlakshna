@@ -16,7 +16,14 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         default: "User"
-    }
+    }, resetToken: {  // New field for storing the reset token
+        type: String,
+        default: null,
+    },
+    resetTokenExpiration: {  // New field for storing token expiration time
+        type: Date,
+        default: null,
+    },
 }, {
     timestamps: true
 })

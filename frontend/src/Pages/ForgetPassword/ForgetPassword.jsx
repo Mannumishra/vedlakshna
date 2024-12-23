@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import mail from "../../images/email-register.gif";
 import "./forgetpassword.css";
 import { Helmet } from "react-helmet";
+import axios from 'axios'; // Import axios for making API requests
+import Swal from "sweetalert2";
 
 const ForgetPassword = () => {
   useEffect(() => {
@@ -9,10 +11,12 @@ const ForgetPassword = () => {
       top: 0,
     });
   }, []);
+
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState(Array(6).fill(""));
+  const [otp, setOtp] = useState(Array(6).fill("")); // You can remove this state since OTP will be handled by the backend
   const [timer, setTimer] = useState(60);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [message, setMessage] = useState(""); // For displaying success/error messages
 
   const handleEmailChange = (e) => setEmail(e.target.value);
 
@@ -25,9 +29,41 @@ const ForgetPassword = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('https://api.panchgavyamrit.com/api/forgot-password', { email });
+      if (response.data.success) {
+        // setIsModalOpen(true);
+        Swal.fire({
+          title: 'Success!',
+          text: 'A reset password link has been sent to your email address.',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+        setEmail("")
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: response.data.message || 'Something went wrong. Please try again.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    } catch (error) {
+      console.error("Error sending reset email", error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Error sending password reset email. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    }
+  };
+
   const verifyOtp = () => {
     const enteredOtp = otp.join("");
-    if (enteredOtp === "123456") {
+    if (enteredOtp === "123456") { // This is for testing, you can modify as needed
       alert("OTP Verified Successfully!");
       setIsModalOpen(false);
     } else {
@@ -37,7 +73,7 @@ const ForgetPassword = () => {
 
   const resendOtp = () => {
     setTimer(60);
-    setOtp(Array(6).fill(""));
+    setOtp(Array(6).fill("")); // Reset OTP fields
     alert("OTP Resent Successfully!");
   };
 
@@ -62,13 +98,7 @@ const ForgetPassword = () => {
           <div className="row align-items-center">
             <div className="col-md-6 mb-3">
               <div className="loginForm">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    setIsModalOpen(true);
-                    // alert(`OTP sent to ${email}`);
-                  }}
-                >
+                <form onSubmit={handleSubmit}>
                   <div className="login-field">
                     <img src={mail} alt="Email Icon" />
                     <input
@@ -100,6 +130,8 @@ const ForgetPassword = () => {
               </div>
             </div>
           </div>
+
+          {message && <div className="alert alert-info">{message}</div>} {/* Display success/error message */}
 
           {/* OTP Modal */}
           {isModalOpen && (

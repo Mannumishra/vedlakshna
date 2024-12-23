@@ -23,6 +23,7 @@ import Profile from './Pages/Profile/Profile'
 import ThankYouPage from './Pages/ThankYouPage/ThankYouPage'
 import PageNotFound from './Pages/PageNotFound/PageNotFound'
 import ReturnRefund from './Pages/ReturnRefund/ReturnRefund'
+import ResetPasswordPage from './Pages/ResetPasswordPage/ResetPasswordPage'
 const App = () => {
   return (
     <>
@@ -47,6 +48,7 @@ const App = () => {
           <Route path='/order-successfully' element={<ThankYouPage />} />
           <Route path='/*' element={<PageNotFound />} />
           <Route path="/return-refund" element={<ReturnRefund />} />
+          <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
 
         </Routes>
         <Footer />
