@@ -99,7 +99,7 @@ const AllProduct = () => {
                             data.map((item, index) =>
                                 <tr key={index}>
                                     <th scope="row">{index + 1}</th>
-                                    <td>{item.categoryName.categoryName}</td>
+                                    <td>{item?.categoryName?.categoryName || "NA"}</td>
                                     <td>{item.productName.length > 40 ? item.productName.slice(0, 40) + "..." : item.productName}</td>
                                     <td>
                                         <img src={item.productImage[0]} alt={item.productName} width="50" height="50" />
