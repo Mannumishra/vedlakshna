@@ -20,7 +20,7 @@ const Login = () => {
       if (response.status === 200) {
         toast.success('Login successful!');
         localStorage.setItem("login", true); // Store login state locally
-        window.location.href = '/admin/dashboard'; // Redirect to dashboard
+        window.location.href = '/dashboard'; // Redirect to dashboard
       } else {
         toast.error(response.data.message || 'Something went wrong!');
       }
