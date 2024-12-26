@@ -44,21 +44,22 @@ const AllProduct = () => {
         }
     };
 
-    const handleStatusChange = async (productId, currentStatus) => {
+    const handleStatusChange = async (productId, field, currentValue) => {
         try {
             const response = await axios.put(`https://api.panchgavyamrit.com/api/update-product/${productId}`, {
-                productStatus: !currentStatus
+                [field]: !currentValue, // Dynamically set the field to update
             });
-            toast.success('Product status updated successfully');
-            // Update the product status in state
+            toast.success(`${field === 'productStatus' ? 'Product status' : 'Bestseller status'} updated successfully`);
+            // Update the specific field in the state
             setData(data.map(item =>
-                item._id === productId ? { ...item, productStatus: !currentStatus } : item
+                item._id === productId ? { ...item, [field]: !currentValue } : item
             ));
         } catch (error) {
-            console.error('Error updating product status', error);
-            toast.error('Failed to update product status');
+            console.error(`Error updating ${field}`, error);
+            toast.error(`Failed to update ${field}`);
         }
     };
+
     return (
         <>
             <ToastContainer />
@@ -90,6 +91,7 @@ const AllProduct = () => {
                             <th scope="col">Product Name</th>
                             <th scope="col">Product Image</th>
                             <th scope="col">Product Status</th>
+                            <th scope="col">Best Seller</th>
                             <th scope="col">Edit</th>
                             <th scope="col">Delete</th>
                         </tr>
@@ -108,9 +110,17 @@ const AllProduct = () => {
                                         <input
                                             type="checkbox"
                                             checked={item.productStatus}
-                                            onChange={() => handleStatusChange(item._id, item.productStatus)}
+                                            onChange={() => handleStatusChange(item._id, 'productStatus', item.productStatus)}
                                         />
                                     </td>
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            checked={item.bestseller}
+                                            onChange={() => handleStatusChange(item._id, 'bestseller', item.bestseller)}
+                                        />
+                                    </td>
+
                                     <td><Link to={`/edit-product/${item._id}`} className="bt edit">Edit <i className="fa-solid fa-pen-to-square"></i></Link></td>
                                     <td>
                                         <button onClick={() => handleDelete(item._id)} className="bt delete">

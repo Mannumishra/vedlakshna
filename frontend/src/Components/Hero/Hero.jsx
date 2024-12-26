@@ -44,7 +44,9 @@ const Hero = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get("https://api.panchgavyamrit.com/api/get-product");
-      setProducts(response.data.products);
+      const productRecord = response.data.products
+      const filterbestseller = productRecord.filter((x) => x.bestseller === true)
+      setProducts(filterbestseller);
     } catch (error) {
       console.error("Error fetching products:", error);
     }

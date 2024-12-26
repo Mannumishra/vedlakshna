@@ -52,6 +52,10 @@ const ProductSchema = new mongoose.Schema({
     productStatus: {
         type: Boolean,
         default: false
+    },
+    bestseller: {
+        type: Boolean,
+        default: false
     }
 });
 

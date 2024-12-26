@@ -5,9 +5,7 @@ const { deleteLocalFile } = require("../utils/DeleteImageFromLoaclFolder");
 // Create a new product
 const createProduct = async (req, res) => {
     try {
-        console.log(req.body)
-        console.log(req.files)
-        const { categoryName, productName, productDetails, productDescription, productInfo,productStatus  } = req.body;
+        const { categoryName, productName, productDetails, productDescription, productInfo, productStatus, bestseller } = req.body;
 
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ message: "At least one product image is required" });
@@ -27,8 +25,9 @@ const createProduct = async (req, res) => {
             productDetails,
             productDescription,
             productInfo,
-            productImage: imageUrls ,// Store all image URLs in an array
+            productImage: imageUrls,// Store all image URLs in an array
             productStatus: productStatus || false,
+            bestseller: bestseller || false
         });
 
         const savedProduct = await newProduct.save();
@@ -78,7 +77,7 @@ const getProductById = async (req, res) => {
 const updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const { categoryName, productName, productDetails, productDescription, productInfo ,productStatus  } = req.body;
+        const { categoryName, productName, productDetails, productDescription, productInfo, productStatus ,bestseller} = req.body;
 
         const product = await Product.findById(id);
         if (!product) {
@@ -90,7 +89,8 @@ const updateProduct = async (req, res) => {
         if (productDetails) product.productDetails = productDetails;
         if (productDescription) product.productDescription = productDescription;
         if (productInfo) product.productInfo = productInfo;
-        if (productStatus !== undefined) product.productStatus = productStatus; 
+        if (productStatus !== undefined) product.productStatus = productStatus;
+        if (bestseller !== undefined) product.bestseller = bestseller;
 
         if (req.files && req.files.length > 0) {
             // Delete old images from Cloudinary before updating

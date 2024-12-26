@@ -18,6 +18,7 @@ const EditProduct = () => {
         productInfo: [{ productweight: '', productPrice: '', productDiscountPercentage: 0, productFinalPrice: 0, stock: 'Available' }],
         productImage: [],
         productStatus: false,
+        bestseller: false
     });
 
     // Fetch categories from API when the component mounts
@@ -46,7 +47,8 @@ const EditProduct = () => {
                     productDescription: product.productDescription,
                     productInfo: product.productInfo,
                     productImage: product.productImage,
-                    productStatus: product.productStatus || false
+                    productStatus: product.productStatus || false,
+                    bestseller: product.bestseller || false
                 });
             } catch (error) {
                 toast.error('Error fetching product');
@@ -72,9 +74,10 @@ const EditProduct = () => {
     };
 
     const handleCheckboxChange = (e) => {
+        const { name, checked } = e.target;
         setFormData(prevState => ({
             ...prevState,
-            productStatus: e.target.checked // Toggle the product status
+            [name]: checked// Toggle the product status
         }));
     };
 
@@ -89,20 +92,20 @@ const EditProduct = () => {
         const { name, value } = e.target;
         const updatedProductInfo = [...formData.productInfo];
         updatedProductInfo[index][name] = value;
-    
+
         // If the price or discount percentage changes, calculate the final price
         if (name === 'productPrice' || name === 'productDiscountPercentage') {
             const price = parseFloat(updatedProductInfo[index].productPrice) || 0;
             const discountPercentage = parseFloat(updatedProductInfo[index].productDiscountPercentage) || 0;
             const finalPrice = price - (price * discountPercentage / 100);
-    
+
             // Update the final price in the form data
             updatedProductInfo[index].productFinalPrice = finalPrice.toFixed(2); // You can set the precision you prefer
         }
-    
+
         setFormData({ ...formData, productInfo: updatedProductInfo });
     };
-    
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -116,6 +119,9 @@ const EditProduct = () => {
             formDataToSubmit.append('productDetails', formData.productDetails);
             formDataToSubmit.append('productDescription', formData.productDescription);
             formDataToSubmit.append('productStatus', formData.productStatus);
+            formDataToSubmit.append('bestseller', formData.bestseller);
+
+
             // Append productInfo
             formData.productInfo.forEach((point, index) => {
                 formDataToSubmit.append(`productInfo[${index}][productweight]`, point.productweight);
@@ -315,7 +321,7 @@ const EditProduct = () => {
                             onChange={handleFileChange}
                         />
                     </div>
-                    <div className="col-12">
+                    <div className="col-md-6">
                         <input
                             type="checkbox"
                             name="productStatus"
@@ -323,6 +329,15 @@ const EditProduct = () => {
                             onChange={handleCheckboxChange}
                         />
                         &nbsp; <label className="form-label">Product Status (Available/Unavailable)</label>
+                    </div>
+                    <div className="col-md-6">
+                        <input
+                            type="checkbox"
+                            name="bestseller"
+                            checked={formData.bestseller}
+                            onChange={handleCheckboxChange}
+                        />
+                        &nbsp; <label className="form-label">Product Best Seller (Available/Unavailable)</label>
                     </div>
                     <div className="col-12 text-center">
                         <button

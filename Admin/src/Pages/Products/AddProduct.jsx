@@ -16,7 +16,8 @@ const AddProduct = () => {
         productDescription: '',
         productInfo: [{ productweight: '', productPrice: '', productDiscountPercentage: 0, productFinalPrice: 0, stock: 'Available' }],
         productImage: [],
-        productStatus: false
+        productStatus: false,
+        bestseller: false
     });
 
     // Fetch categories from API when the component mounts
@@ -49,9 +50,10 @@ const AddProduct = () => {
     };
 
     const handleCheckboxChange = (e) => {
+        const { name, checked } = e.target;
         setFormData(prevState => ({
             ...prevState,
-            productStatus: e.target.checked // Toggle the product status
+            [name]: checked // Toggle the product status
         }));
     };
 
@@ -94,6 +96,7 @@ const AddProduct = () => {
             formDataToSubmit.append('productDetails', formData.productDetails);
             formDataToSubmit.append('productDescription', formData.productDescription);
             formDataToSubmit.append('productStatus', formData.productStatus);
+            formDataToSubmit.append('bestseller', formData.bestseller);
 
             // Append productInfo
             formData.productInfo.forEach((point, index) => {
@@ -289,7 +292,7 @@ const AddProduct = () => {
                         />
                     </div>
 
-                    <div className="col-12">
+                    <div className="col-md-6">
                         <input
                             type="checkbox"
                             name="productStatus"
@@ -297,6 +300,15 @@ const AddProduct = () => {
                             onChange={handleCheckboxChange}
                         />
                         &nbsp; <label className="form-label">Product Status (Available/Unavailable)</label>
+                    </div>
+                    <div className="col-md-6">
+                        <input
+                            type="checkbox"
+                            name="bestseller"
+                            checked={formData.bestseller}
+                            onChange={handleCheckboxChange}
+                        />
+                        &nbsp; <label className="form-label">Product Best Seller (Available/Unavailable)</label>
                     </div>
 
                     <div className="col-12 text-center">
