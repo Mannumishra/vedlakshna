@@ -126,14 +126,14 @@ const ProductsTabs = () => {
     <section className="products-tabs mt-3">
       <div className="container">
         <div className="product_heading_tab">
-          <div>
+          <div className="tabsection">
             <h2>
               <b>Pure Ghee & More</b> <br />
               Bringing Natural Goodness to Your Home!
             </h2>
           </div>
           <div className="tabs">
-            {categories.slice(0, 3).map((category) => (
+            {categories.slice(0, 7).map((category) => (
               <button
                 key={category._id}
                 className={`tab-button ${activeTab === category._id ? "active" : ""}`}
