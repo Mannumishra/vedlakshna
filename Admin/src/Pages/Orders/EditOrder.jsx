@@ -3,9 +3,11 @@ import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const EditOrder = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { orderId } = useParams();
     const [order, setOrder] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -42,7 +44,7 @@ const EditOrder = () => {
             });
             if (response.data.success) {
                 toast.success('Order updated successfully!');
-                navigate("/all-orders")
+                navigate("/all-orders");
                 setOrder(response.data.data);
             } else {
                 toast.error('Failed to update order!');
@@ -53,6 +55,71 @@ const EditOrder = () => {
         }
     };
 
+    const calculateOriginalPrice = (finalPrice, tax) => {
+        return (finalPrice / (1 + tax / 100)).toFixed(2);
+    };
+
+    const downloadBill = async () => {
+        if (!order) return;
+
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text('Invoice', 14, 22);
+
+        doc.setFontSize(12);
+        doc.text(`Order ID: ${order._id}`, 14, 32);
+        doc.text(`Order Date: ${new Date(order.orderDate).toLocaleString()}`, 14, 40);
+        doc.text(`Customer Name: ${order.shippingAddress.name}`, 14, 48);
+        doc.text(`Email: ${order.shippingAddress.email}`, 14, 56);
+        doc.text(`Phone: ${order.shippingAddress.phone}`, 14, 64);
+        doc.text(
+            `Address: ${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.state}, ${order.shippingAddress.country} - ${order.shippingAddress.postalCode}`,
+            14,
+            72
+        );
+
+        const productRows = [];
+
+        // Fetch tax details for each product
+        for (const product of order.products) {
+            try {
+                const response = await axios.get(`https://api.panchgavyamrit.com/api/single-product/${product.productId}`);
+                const productDetails = response.data.product;
+
+                const productInfo = productDetails.productInfo.find(info => info.productweight === product.weight);
+                const tax = productInfo?.tax || 0;
+                const originalPrice = calculateOriginalPrice(product.price, tax);
+
+                productRows.push([
+                    product.productName,
+                    product.weight,
+                    product.quantity,
+                    `${tax}%`,
+                    `₹${originalPrice}`,
+                    `₹${product.price}`,
+                ]);
+            } catch (error) {
+                console.error(`Error fetching product details for ID: ${product.productId}`, error);
+                toast.error(`Failed to fetch tax details for ${product.productName}`);
+                return;
+            }
+        }
+
+        doc.autoTable({
+            startY: 80,
+            head: [['Product Name', 'Weight', 'Quantity', 'Tax (%)', 'Price (Excl. Tax)', 'Final Price']],
+            body: productRows,
+        });
+
+        const finalY = doc.lastAutoTable.finalY + 10;
+        doc.text(`Shipping Cost: ₹${order.shippingCost}`, 14, finalY);
+        doc.text(`Total Amount: ₹${order.totalAmount}`, 14, finalY + 8);
+
+        doc.save(`Invoice_${order._id}.pdf`);
+    };
+
+
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -60,6 +127,7 @@ const EditOrder = () => {
     if (!order) {
         return <div>No order data available.</div>;
     }
+
 
     return (
         <>
@@ -80,8 +148,9 @@ const EditOrder = () => {
                 <div className="row">
                     <div className="col-md-8">
                         <div className="card">
-                            <div className="card-header">
+                            <div className="card-header d-flex justify-content-between">
                                 <h5 className="card-title">Order Details</h5>
+                                <button className='btn btn-success' onClick={downloadBill}>Print Bill</button>
                             </div>
                             <div className="table-responsive">
                                 <table className="table table-bordered">

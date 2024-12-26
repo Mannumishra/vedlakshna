@@ -37,6 +37,7 @@ exports.checkout = async (req, res) => {
                 price: item.price,
                 weight: item.weight,
                 quantity: item.quantity,
+                productId: item.productId
             })),
             shippingAddress,
             paymentMethod,

@@ -21,6 +21,10 @@ const productMini = new mongoose.Schema({
         type: String,
         required: true,
         enum: ["Available", "UnAvailable"]
+    },
+    tax: {
+        type: Number,
+        required: true
     }
 });
 

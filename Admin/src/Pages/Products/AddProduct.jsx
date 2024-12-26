@@ -14,7 +14,7 @@ const AddProduct = () => {
         productName: '',
         productDetails: '',
         productDescription: '',
-        productInfo: [{ productweight: '', productPrice: '', productDiscountPercentage: 0, productFinalPrice: 0, stock: 'Available' }],
+        productInfo: [{ productweight: '', productPrice: '', productDiscountPercentage: 0, productFinalPrice: 0, tax: '', stock: 'Available' }],
         productImage: [],
         productStatus: false,
         bestseller: false
@@ -60,7 +60,7 @@ const AddProduct = () => {
     const handleAddPoint = () => {
         setFormData(prevState => ({
             ...prevState,
-            productInfo: [...prevState.productInfo, { productweight: '', productPrice: '', productDiscountPercentage: 0, productFinalPrice: 0, stock: 'Available' }]
+            productInfo: [...prevState.productInfo, { productweight: '', productPrice: '', productDiscountPercentage: 0, productFinalPrice: 0, stock: 'Available', tax: '' }]
         }));
     };
 
@@ -105,6 +105,7 @@ const AddProduct = () => {
                 formDataToSubmit.append(`productInfo[${index}][productDiscountPercentage]`, point.productDiscountPercentage);
                 formDataToSubmit.append(`productInfo[${index}][productFinalPrice]`, point.productFinalPrice);
                 formDataToSubmit.append(`productInfo[${index}][stock]`, point.stock);
+                formDataToSubmit.append(`productInfo[${index}][tax]`, parseInt(point.tax));
             });
 
             // Append productImage
@@ -192,7 +193,7 @@ const AddProduct = () => {
                         <label className="form-label">Product Points</label>
                         {formData.productInfo.map((point, index) => (
                             <div key={index} className="d-flex mb-2">
-                                <div className="me-2">
+                                <div className="col-md-1 me-2">
                                     <label className="form-label">Weight</label>
                                     <input
                                         type="text"
@@ -204,7 +205,7 @@ const AddProduct = () => {
                                         required
                                     />
                                 </div>
-                                <div className="me-2">
+                                <div className="col-md-2 me-2">
                                     <label className="form-label">Price</label>
                                     <input
                                         type="number"
@@ -216,7 +217,7 @@ const AddProduct = () => {
                                         required
                                     />
                                 </div>
-                                <div className="me-2">
+                                <div className="col-md-2 me-2">
                                     <label className="form-label">Discount %</label>
                                     <input
                                         type="number"
@@ -228,7 +229,7 @@ const AddProduct = () => {
                                         required
                                     />
                                 </div>
-                                <div className="me-2">
+                                <div className="col-md-2 me-2">
                                     <label className="form-label">Final Price</label>
                                     <input
                                         type="number"
@@ -240,7 +241,18 @@ const AddProduct = () => {
                                         required
                                     />
                                 </div>
-                                <div className="me-2">
+                                <div className="col-md-1 me-2">
+                                    <label className="form-label">Tax %</label>
+                                    <select name="tax" id="" onChange={(e) => handlePointChange(index, e)} className='form-select'>
+                                        <option value="">Tax</option>
+                                        <option value="3%">3%</option>
+                                        <option value="5%">5%</option>
+                                        <option value="12%">12%</option>
+                                        <option value="18%">18%</option>
+                                        <option value="28%">28%</option>
+                                    </select>
+                                </div>
+                                <div className="col-md-2 me-2">
                                     <label className="form-label">Stock</label>
                                     <select
                                         className="form-select"
@@ -255,13 +267,13 @@ const AddProduct = () => {
                                 </div>
                                 <button
                                     type="button"
-                                    className="btn btn-danger"
+                                    className="btn btn-danger col-md-1" style={{ height: "40px", marginTop: "28px" }}
                                     onClick={() => {
                                         const updatedProductInfo = formData.productInfo.filter((_, i) => i !== index);
                                         setFormData({ ...formData, productInfo: updatedProductInfo });
                                     }}
                                 >
-                                    Remove
+                                    Delete
                                 </button>
                             </div>
                         ))}
