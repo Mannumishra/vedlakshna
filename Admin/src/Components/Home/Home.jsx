@@ -28,8 +28,8 @@ import EditPincode from '../../Pages/PinCode/EditPincode'
 import AllContactInquery from '../../Pages/ContactInquery/AllContactInquery'
 
 const Home = () => {
-  // const loginValue = localStorage.getItem("login")
-  const loginValue = true
+  const loginValue = localStorage.getItem("login")
+  // const loginValue = true
   return (
     <>
       {
