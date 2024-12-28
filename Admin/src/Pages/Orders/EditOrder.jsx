@@ -3,8 +3,131 @@ import axios from 'axios';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { PDFDownloadLink, Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+
+// Define styles for PDF
+const styles = StyleSheet.create({
+    page: {
+        padding: 20,
+        fontSize: 9,
+    },
+    section: {
+        marginBottom: 10,
+    },
+    shipping: {
+        fontSize: 12,
+        fontWeight: 700,
+        marginBottom: 10,
+    },
+    header: {
+        fontSize: 18,
+        textAlign: "center",
+        marginBottom: 20,
+    },
+    table: {
+        display: "table",
+        width: "auto",
+        marginVertical: 20,
+    },
+    tableRow: {
+        flexDirection: "row",
+    },
+    tableCol: {
+        borderStyle: "solid",
+        borderWidth: 1,
+        padding: 5,
+        flex: 1,
+    },
+    bold: {
+        fontWeight: "bold",
+    },
+    footer: {
+        marginTop: 20,
+        textAlign: "center",
+    },
+});
+
+// PDF Component
+const InvoicePDF = ({ order }) => {
+    const [taxDetails, setTaxDetails] = useState([]);
+
+    useEffect(() => {
+        const fetchTaxDetails = async () => {
+            const details = [];
+            for (const product of order.products) {
+                try {
+                    const response = await axios.get(`https://api.panchgavyamrit.com/api/single-product/${product.productId}`);
+                    const productDetails = response.data.product;
+
+                    const productInfo = productDetails.productInfo.find(info => info.productweight === product.weight);
+                    const tax = productInfo?.tax || 0;
+                    details.push({ ...product, tax });
+                } catch (error) {
+                    console.error(`Error fetching product details for ID: ${product.productId}`, error);
+                    toast.error(`Failed to fetch tax details for ${product.productName}`);
+                }
+            }
+            setTaxDetails(details);
+        };
+
+        fetchTaxDetails();
+    }, [order]);
+
+    return (
+        <Document>
+            <Page size="A4" style={styles.page}>
+                <Text style={styles.header}>Shri Godham Mahatirtha Anandavan Pathmeda</Text>
+                <Text style={styles.shipping}>Shipping Details</Text>
+                <Text style={styles.section}>Order ID: {order._id}</Text>
+                <Text style={styles.section}>
+                    Customer Name: {order.shippingAddress.name}
+                </Text>
+                <Text style={styles.section}>
+                    Address: {order.shippingAddress.address}, {order.shippingAddress.city}, {" "}
+                    {order.shippingAddress.state}, {order.shippingAddress.country} -{" "}
+                    {order.shippingAddress.postalCode}
+                </Text>
+                <Text style={styles.section}>Order Date: {new Date(order.orderDate).toLocaleString()}</Text>
+                <View style={styles.table}>
+                    <View style={[styles.tableRow, { backgroundColor: "#ddd" }]}>
+                        <Text style={[styles.tableCol, styles.bold]}>Product Name</Text>
+                        <Text style={[styles.tableCol, styles.bold]}>Weight</Text>
+                        <Text style={[styles.tableCol, styles.bold]}>Quantity</Text>
+                        <Text style={[styles.tableCol, styles.bold]}>Tax (%)</Text>
+                        <Text style={[styles.tableCol, styles.bold]}>Price (Excl. Tax)</Text>
+                        <Text style={[styles.tableCol, styles.bold]}>Final Price</Text>
+                    </View>
+                    {taxDetails.map((product, index) => (
+                        <View key={index} style={styles.tableRow}>
+                            <Text style={styles.tableCol}>{product.productName.trim()}</Text>
+                            <Text style={styles.tableCol}>{product.weight.toString().trim()}</Text>
+                            <Text style={styles.tableCol}>{product.quantity}</Text>
+                            <Text style={styles.tableCol}>
+                                {Number(product.tax).toFixed(2)}%
+                            </Text>
+                            <Text style={styles.tableCol}>
+                                ₹{Number(product.price / (1 + product.tax / 100))
+                                    .toFixed(2)
+                                    .replace(/[^\d.-]/g, "")}
+                            </Text>
+                            <Text style={styles.tableCol}>
+                                ₹{Number(product.price)
+                                    .toFixed(2)
+                                    .replace(/[^\d.-]/g, "")}
+                            </Text>
+                        </View>
+                    ))}
+                </View>
+
+
+                {/* <Text style={styles.section}>Price : ₹{order.shippingCost}</Text> */}
+                <Text style={styles.section}>Shipping Cost: ₹{order.shippingCost}</Text>
+                <Text style={styles.section}>Total Amount: ₹{order.totalAmount}</Text>
+                <Text style={styles.footer}>Thank you for your order!</Text>
+            </Page>
+        </Document>
+    );
+};
 
 const EditOrder = () => {
     const navigate = useNavigate();
@@ -55,71 +178,6 @@ const EditOrder = () => {
         }
     };
 
-    const calculateOriginalPrice = (finalPrice, tax) => {
-        return (finalPrice / (1 + tax / 100)).toFixed(2);
-    };
-
-    const downloadBill = async () => {
-        if (!order) return;
-
-        const doc = new jsPDF();
-        doc.setFontSize(18);
-        doc.text('Invoice', 14, 22);
-
-        doc.setFontSize(12);
-        doc.text(`Order ID: ${order._id}`, 14, 32);
-        doc.text(`Order Date: ${new Date(order.orderDate).toLocaleString()}`, 14, 40);
-        doc.text(`Customer Name: ${order.shippingAddress.name}`, 14, 48);
-        doc.text(`Email: ${order.shippingAddress.email}`, 14, 56);
-        doc.text(`Phone: ${order.shippingAddress.phone}`, 14, 64);
-        doc.text(
-            `Address: ${order.shippingAddress.address}, ${order.shippingAddress.city}, ${order.shippingAddress.state}, ${order.shippingAddress.country} - ${order.shippingAddress.postalCode}`,
-            14,
-            72
-        );
-
-        const productRows = [];
-
-        // Fetch tax details for each product
-        for (const product of order.products) {
-            try {
-                const response = await axios.get(`https://api.panchgavyamrit.com/api/single-product/${product.productId}`);
-                const productDetails = response.data.product;
-
-                const productInfo = productDetails.productInfo.find(info => info.productweight === product.weight);
-                const tax = productInfo?.tax || 0;
-                const originalPrice = calculateOriginalPrice(product.price, tax);
-
-                productRows.push([
-                    product.productName,
-                    product.weight,
-                    product.quantity,
-                    `${tax}%`,
-                    `₹${originalPrice}`,
-                    `₹${product.price}`,
-                ]);
-            } catch (error) {
-                console.error(`Error fetching product details for ID: ${product.productId}`, error);
-                toast.error(`Failed to fetch tax details for ${product.productName}`);
-                return;
-            }
-        }
-
-        doc.autoTable({
-            startY: 80,
-            head: [['Product Name', 'Weight', 'Quantity', 'Tax (%)', 'Price (Excl. Tax)', 'Final Price']],
-            body: productRows,
-        });
-
-        const finalY = doc.lastAutoTable.finalY + 10;
-        doc.text(`Shipping Cost: ₹${order.shippingCost}`, 14, finalY);
-        doc.text(`Total Amount: ₹${order.totalAmount}`, 14, finalY + 8);
-
-        doc.save(`Invoice_${order._id}.pdf`);
-    };
-
-
-
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -127,7 +185,6 @@ const EditOrder = () => {
     if (!order) {
         return <div>No order data available.</div>;
     }
-
 
     return (
         <>
@@ -150,7 +207,18 @@ const EditOrder = () => {
                         <div className="card">
                             <div className="card-header d-flex justify-content-between">
                                 <h5 className="card-title">Order Details</h5>
-                                <button className='btn btn-success' onClick={downloadBill}>Print Bill</button>
+                                <PDFDownloadLink
+                                    document={<InvoicePDF order={order} />}
+                                    fileName={`Invoice_${order._id}.pdf`}
+                                >
+                                    {({ loading }) =>
+                                        loading ? (
+                                            <button className="btn btn-secondary">Loading...</button>
+                                        ) : (
+                                            <button className="btn btn-success">Download Invoice</button>
+                                        )
+                                    }
+                                </PDFDownloadLink>
                             </div>
                             <div className="table-responsive">
                                 <table className="table table-bordered">
@@ -252,7 +320,6 @@ const EditOrder = () => {
                                             alt={product.productName}
                                             style={{ maxWidth: '100px', display: 'block', margin: '10px 0' }}
                                         />
-                                        {/* <p className="mb-1">SKU: {product._id}</p> */}
                                         <p className="mb-1">Weight: {product.weight}</p>
                                         <p className="mb-1">Quantity: {product.quantity}</p>
                                         <p className="mb-0">Price: ₹{product.price}</p>
@@ -263,7 +330,7 @@ const EditOrder = () => {
                     </div>
                 </div>
                 <div className="">
-                    <button className="btn btn-primary" onClick={handleUpdate} style={{ backgroundColor: "#F58634 !impotant" }}>
+                    <button className="btn btn-primary" onClick={handleUpdate}>
                         Save Changes
                     </button>
                 </div>
