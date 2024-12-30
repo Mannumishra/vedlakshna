@@ -111,7 +111,8 @@ const Hero = () => {
   var settings = {
     dots: true,
     infinite: false,
-    speed: 500,
+    speed: 400,
+    autoplay: true ,
     slidesToShow: 4,
     slidesToScroll: 1,
     initialSlide: 0,
@@ -147,6 +148,7 @@ const Hero = () => {
     dots: true,
     infinite: true,
     speed: 500,
+    autoplay: true ,
     slidesToShow: 4,
     slidesToScroll: 1,
     responsive: [

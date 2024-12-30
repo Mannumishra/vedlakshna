@@ -62,7 +62,7 @@ const Products = () => {
           weight: productWeight,
           price: productInfo.productFinalPrice,
           originalPrice: productInfo.productPrice,
-          discountPercentage: productInfo.productDiscountPercentage,
+          productDiscountPercentage: productInfo.productDiscountPercentage,
           stock: productInfo.stock,
         },
       }));
@@ -137,8 +137,8 @@ const Products = () => {
                                 product.productInfo[0].productPrice}</del>
                           </span> <br />
                           <span className="current-price text-danger">
-                            Off {selectedWeights[product._id]?.discountPercentage ||
-                              product.productInfo[0].productDiscountPrice} %
+                            Off {selectedWeights[product._id]?.productDiscountPercentage ||
+                              product.productInfo[0].productDiscountPercentage} %
                           </span> <br />
                           <span className="current-price">
                             &#8377;

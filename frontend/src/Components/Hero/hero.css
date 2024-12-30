@@ -430,6 +430,7 @@ select:focus-visible {
 /* article section end */
 
 @media only screen and (max-width: 768px) {
+  
   .article_card{
     max-width: 100%;
   }
@@ -467,7 +468,7 @@ select:focus-visible {
     width: 96%;
     padding: 20px 5px;
     margin-top: 5rem;
-    height: 42vh;
+    height: fit-content;
   }
   .fruitvegitabls1 .overlay .firstCol {
     width: 100%;

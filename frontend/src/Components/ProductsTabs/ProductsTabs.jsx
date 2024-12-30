@@ -15,7 +15,8 @@ const ProductsTabs = () => {
   const settings = {
     dots: true,
     infinite: false,
-    speed: 500,
+    speed: 400,
+    autoplay: true,
     slidesToShow: 4,
     slidesToScroll: 1,
     initialSlide: 0,
@@ -171,11 +172,11 @@ const ProductsTabs = () => {
                           <span className="current-price">
                             <del>  ₹ {selectedProductInfo?.productPrice || "0.00"}</del>
                           </span> <br />
-                          {selectedProductInfo?.productDiscountPercentage && (
+                          {/* {selectedProductInfo?.productDiscountPercentage && ( */}
                             <span className="discount-price text-danger">
                               Off {selectedProductInfo.productDiscountPercentage} %
                             </span>
-                          )} <br />
+                           <br />
                           {selectedProductInfo?.productFinalPrice && (
                             <span className="current-price">
                               ₹ {selectedProductInfo.productFinalPrice}
