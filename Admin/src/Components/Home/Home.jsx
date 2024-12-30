@@ -34,7 +34,6 @@ const Home = () => {
     <>
       {
         loginValue ? <>
-
           <Header />
           <div className="rightside">
             <Routes>

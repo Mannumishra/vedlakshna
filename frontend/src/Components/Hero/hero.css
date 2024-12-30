@@ -206,8 +206,8 @@
 
 .price {
   margin: 8px 0;
-  width: 50%;
-  /* text-align: end; */
+  width: 30%;
+  text-align: end;
 }
 
 .current-price {
@@ -465,9 +465,9 @@ select:focus-visible {
   }
   .product-card {
     width: 96%;
-    padding: 5px;
-    margin-top: 3rem;
-    height: 34vh;
+    padding: 20px 5px;
+    margin-top: 5rem;
+    height: 42vh;
   }
   .fruitvegitabls1 .overlay .firstCol {
     width: 100%;
@@ -479,6 +479,14 @@ select:focus-visible {
     max-width: fit-content;
     font-size: 12px;
   }
+  .product-image {
+    margin: auto;
+    position: absolute;
+    top: -77px;
+    left: 17%;
+    width: 100px;
+    height: 100px;
+}
   .product-image img{
     width: 100px;
     top: -70px;
@@ -533,4 +541,8 @@ select:focus-visible {
     font-size: 12px;
     margin: 0;
   }
+  .price {
+    width: 50%;
+  }
+  
 }

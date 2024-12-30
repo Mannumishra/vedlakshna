@@ -107,13 +107,13 @@ const Header = () => {
       {/* Main Header */}
       <header className="main-header">
         <div className="container">
-          <div className="row align-items-center">
+          <div className="row align-items-center header-row">
             <div className="col-md-2 col-6">
               <Link to={"/"}>
                 <img
                   style={{ objectFit: "cover" }}
                   src={logo}
-                  className="w-50"
+                  className="logo"
                   alt=""
                 />
               </Link>
@@ -135,13 +135,20 @@ const Header = () => {
             </div>
             <div className="col-md-4 col-6 text-end">
               {/* Toggle Sidebar Button */}
+              <div>
+
+              <Link className="d-md-none toggleButton" to={"/cart"}>
+              <i className="bi bi-cart"></i>
+              </Link>
               <button
                 className="d-md-none toggleButton"
                 onClick={toggleSidebar}
                 aria-label="Toggle Navigation"
-              >
+                >
                 <i className="bi bi-list"></i>
               </button>
+              
+                </div>
               <div className="header-card-option d-none d-md-flex">
                 <div>
                   <p className="mb-0">Call and make an appointment</p>
@@ -187,16 +194,25 @@ const Header = () => {
         </div>
         <ul className="list-unstyled">
           <li onClick={toggleSidebar}>
-            <Link to="/">Home</Link>
+            <Link to="/"><i class="bi bi-house"></i> Home</Link>
           </li>
           <li onClick={toggleSidebar}>
-            <Link to="/about-us">About Us</Link>
+            <Link to="/about-us"><i class="bi bi-info-circle"></i> About Us</Link>
           </li>
           <li onClick={toggleSidebar}>
-            <Link to="/contact-us">Contact Us</Link>
+            <Link to="/contact-us"><i class="bi bi-person-lines-fill"></i> Contact Us</Link>
           </li>
           <li onClick={toggleSidebar}>
-            <Link to="/all-products">Products</Link>
+            <Link to="/all-products"><i class="bi bi-diagram-2"></i> Products</Link>
+          </li>
+          <li onClick={toggleSidebar}>
+            <Link to="/cart"><i class="bi bi-cart3"></i> Cart</Link>
+          </li>
+          <li onClick={toggleSidebar}>
+            <Link to="/register"><i class="bi bi-box-arrow-in-right"></i> Register</Link>
+          </li>
+          <li onClick={toggleSidebar}>
+            <Link to="/login"><i class="bi bi-door-open"></i> Login</Link>
           </li>
         </ul>
       </aside>

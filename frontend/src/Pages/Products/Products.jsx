@@ -116,10 +116,10 @@ const Products = () => {
             </div>
 
             {/* All Products */}
-            <div className="col-md-9 all-products">
+            <div className="col-md-9 all-products product-top-spacing">
               <div className="row">
                 {products.map((product) => (
-                  <div key={product._id} className="col-md-4 col-6">
+                  <div key={product._id} className="col-md-4 col-6 pruduct-spacing">
                     <div className="product-card-page">
                       <div className="product-image-product">
                         <img

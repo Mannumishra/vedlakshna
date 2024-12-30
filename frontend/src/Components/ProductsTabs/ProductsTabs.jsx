@@ -17,14 +17,14 @@ const ProductsTabs = () => {
     infinite: false,
     speed: 500,
     slidesToShow: 4,
-    slidesToScroll: 4,
+    slidesToScroll: 1,
     initialSlide: 0,
     responsive: [
       {
         breakpoint: 1024,
         settings: {
           slidesToShow: 3,
-          slidesToScroll: 3,
+          slidesToScroll: 1,
           infinite: true,
           dots: true,
         },
@@ -33,7 +33,7 @@ const ProductsTabs = () => {
         breakpoint: 600,
         settings: {
           slidesToShow: 2,
-          slidesToScroll: 2,
+          slidesToScroll: 1,
           dots: false,
         },
       },
@@ -138,7 +138,7 @@ const ProductsTabs = () => {
                 key={category._id}
                 className={`tab-button ${activeTab === category._id ? "active" : ""}`}
                 onClick={() => setActiveTab(category._id)}
-                style={{ textTransform: "capitalize" }}
+                style={{ textTransform: "capitalize" , fontSize:'14px' }}
               >
                 {category.categoryName}
               </button>

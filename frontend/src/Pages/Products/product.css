@@ -39,7 +39,7 @@
 }
 
 .all-products {
-  padding: 0rem 2rem;
+  padding: 0rem 0rem;
 }
 
 .productsPage {
@@ -51,7 +51,17 @@
   height: 100%;
   object-fit: cover;
 }
+
+.pruduct-spacing{
+  margin-bottom: 9rem;
+}
+.product-top-spacing{
+  margin-top: 3rem;
+}
 @media only screen and (max-width: 768px) {
+  .pruduct-spacing{
+    margin-bottom: 2rem;
+  }
   .sidebar {
     padding: 0;
   }

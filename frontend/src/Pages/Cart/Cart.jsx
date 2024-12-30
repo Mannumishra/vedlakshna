@@ -151,7 +151,7 @@ const Cart = () => {
               </tbody>
             </table>
           </div>
-          <div className="d-flex justify-content-between">
+          <div className="d-flex justify-content-between mt-3">
             <button onClick={() => navigate("/all-products")} className="add-to-cart">
               Continue Shopping
             </button> &nbsp;

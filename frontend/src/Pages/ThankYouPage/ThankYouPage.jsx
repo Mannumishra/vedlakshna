@@ -18,7 +18,7 @@ const ThankYouPage = () => {
             ))}
           </div>
         </div>
-        <h1 className="mt-4">Thank you for ordering!</h1>
+        <h1 className="mt-4 text-center">Thank you for ordering!</h1>
         <p className="text-muted text-center">
           We appreciate your trust in us!
           <br />

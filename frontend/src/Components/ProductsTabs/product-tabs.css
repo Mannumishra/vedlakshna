@@ -7,7 +7,8 @@
   max-width: fit-content;
   max-height: fit-content;
   border-radius: 2rem;
-  width: 53%;
+  width: 55%;
+  padding: 0.5rem;
 }
 
 .tab-button {
@@ -50,6 +51,9 @@
 }
 
 @media only screen and (max-width: 768px) {
+  .pruduct-spacing {
+    margin-bottom: 2rem;
+  }
   .product_heading_tab {
     display: grid;
     text-align: center;
@@ -71,6 +75,6 @@
   }
 
   .tab-button {
-    padding: 3px 5px
+    padding: 3px 5px;
   }
 }

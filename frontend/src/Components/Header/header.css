@@ -187,7 +187,7 @@
   background-color: transparent;
 }
 .toggleButton i{
-  font-size: 30px;
+  font-size: 22px;
   color: var(--themeColor);
 }
 
@@ -203,9 +203,18 @@
   justify-content: end;
 }
 
+.logo{
+  width: 60%;
+}
+
 /* Media Queries */
 @media (max-width: 768px) {
-
+  .header-row{
+    padding: 5px 0;
+  }
+  .logo{
+    width: 40%;
+  }
   .main-header .row .col-md-2{
     height: 40px;
     border-right: 0;
