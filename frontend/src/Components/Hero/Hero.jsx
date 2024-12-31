@@ -13,6 +13,7 @@ import SubscribeForm from "../SubscribeForm/SubscribeForm";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import offer from '../../images/offers.jpeg'
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -312,6 +313,8 @@ const Hero = () => {
       </section>
 
 
+
+
       <section className="hero-product">
         <div className="container">
           <div className="headings">
@@ -410,6 +413,18 @@ const Hero = () => {
                 ))
               }
             </Slider>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div className="container">
+          <div className="row mt-3">
+            <div className="col-md-12 mt-2">
+              <div className="cartimagediv" style={{ }}>
+                <img src={offer} alt="" className="cartImage"/>
+              </div>
+            </div>
           </div>
         </div>
       </section>

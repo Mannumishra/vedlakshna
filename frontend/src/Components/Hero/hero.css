@@ -1,12 +1,17 @@
-.sidebutton, .sidewhatsapp, .sidecall {
+.sidebutton,
+.sidewhatsapp,
+.sidecall {
   position: relative;
 }
 
-.sidebutton a, .sidewhatsapp a, .sidecall a {
+.sidebutton a,
+.sidewhatsapp a,
+.sidecall a {
   position: fixed;
   right: 20px;
   z-index: 99;
-  background-color: #fff; /* default background */
+  background-color: #fff;
+  /* default background */
   padding: 10px 15px;
   color: white;
   border-radius: 50%;
@@ -36,30 +41,46 @@
 /* Hover Effects */
 .sidebutton a:hover {
   transform: scale(1.2) rotate(15deg);
-  background-color: #f92c8b; /* Pink color for hover */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  background-color: #f92c8b;
+  /* Pink color for hover */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  /* Shadow effect */
 }
 
 .sidewhatsapp a:hover {
   transform: scale(1.2) rotate(15deg);
-  background-color: #25d366; /* WhatsApp green hover color */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  background-color: #25d366;
+  /* WhatsApp green hover color */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  /* Shadow effect */
 }
 
 .sidecall a:hover {
   transform: scale(1.2) rotate(15deg);
-  background-color: #34b7f1; /* Light blue for call hover */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Shadow effect */
+  background-color: #34b7f1;
+  /* Light blue for call hover */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  /* Shadow effect */
 }
 
 /* Animations for subtle movement */
 @keyframes bounce {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-  100% { transform: translateY(0); }
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
-.sidebutton a, .sidewhatsapp a, .sidecall a {
+.sidebutton a,
+.sidewhatsapp a,
+.sidecall a {
   animation: bounce 2s ease-in-out infinite;
 }
 
@@ -103,6 +124,7 @@
   text-align: center;
   font-size: 30px;
 }
+
 .overlayContent h1 {
   color: white;
   max-width: 70%;
@@ -111,6 +133,7 @@
   font-weight: 700;
   font-size: 40px;
 }
+
 .overlayContent p {
   color: white;
   text-align: center;
@@ -140,7 +163,8 @@
   font-size: 40px;
 }
 
-.hero-product, .grocery {
+.hero-product,
+.grocery {
   background-color: var(--whiteBackground);
   padding: 2rem 0rem;
 }
@@ -148,6 +172,7 @@
 .hero-product {
   padding: 20px 0px;
 }
+
 .product-card {
   width: 270px;
   padding: 16px;
@@ -159,13 +184,13 @@
   margin-top: 6rem;
 }
 
-.product-card a{
+.product-card a {
   color: black;
   text-decoration: none;
 }
 
 
-.product-image{
+.product-image {
   margin: auto;
   position: absolute;
   top: -120px;
@@ -186,6 +211,7 @@
   align-items: baseline;
   margin-top: 10px;
 }
+
 .wishlist {
   color: #00a884;
   font-size: 14px;
@@ -230,6 +256,7 @@
   font-size: 14px;
   margin: 8px 0 4px;
 }
+
 /* 
 .pot-select {
   width: 100%;
@@ -241,6 +268,7 @@
 select:focus-visible {
   outline: 1px solid var(--themeColor);
 }
+
 .pot-select:focus {
   border: none;
 }
@@ -266,16 +294,19 @@ select:focus-visible {
 .slick-next:before {
   color: var(--themeColor) !important;
 }
+
 /* hero product section end */
 
 /* grocerry section */
 .grocery h4 {
   color: var(--themeColor);
 }
+
 .grocery h2 {
   font-size: 40px;
   font-weight: 200;
 }
+
 /* grocerry section end */
 
 /* count up section */
@@ -316,6 +347,7 @@ select:focus-visible {
   height: 100%;
   width: 100%;
 }
+
 .productDetailsCols .fruitvegitabls2 {
   background-image: url(../../images/fruitbg2.png);
   background-size: cover;
@@ -324,6 +356,7 @@ select:focus-visible {
   height: 100%;
   width: 100%;
 }
+
 .productDetailsCols .fruitvegitabls3 {
   background-image: url(../../images/fruitbg3.png);
   background-size: cover;
@@ -358,11 +391,13 @@ select:focus-visible {
 .fruitvegitabls3 h6 {
   color: var(--themeColor);
 }
+
 .fruitvegitabls1 h4,
 .fruitvegitabls2 h4,
 .fruitvegitabls3 h4 {
   color: white;
 }
+
 .fruitvegitabls1 p,
 .fruitvegitabls2 p,
 .fruitvegitabls3 p {
@@ -375,17 +410,20 @@ select:focus-visible {
 .subscribes {
   padding: 2rem 0;
 }
+
 .subscribes .container {
   background-color: #fd6f0612;
   border-radius: 1rem;
   padding: 2rem;
 }
+
 .subscribeInput {
   border: 1px solid black;
   border-radius: 2rem;
   width: 70%;
   padding: 10px 20px;
 }
+
 /* subscribes section end */
 
 /* article section */
@@ -401,6 +439,7 @@ select:focus-visible {
   max-width: 95%;
   background-color: #fd6f0612;
 }
+
 .article_card img {
   object-fit: cover;
   width: 100%;
@@ -429,57 +468,85 @@ select:focus-visible {
 
 /* article section end */
 
+.cartimagediv {
+  display: flex;
+  justify-Content: center;
+  align-Items: center;
+}
+.cartImage{
+  height: 250px;
+  width: 100%;
+}
+
+
+
 @media only screen and (max-width: 768px) {
-  
-  .article_card{
+  .cartImage{
+    height: 120px;
+    width: 100%;
+  }
+  .article_card {
     max-width: 100%;
   }
+
   .overlayContent {
     max-width: 100%;
     top: 5%;
   }
+
   .overlayContent h5 {
     font-size: 16px;
   }
+
   .overlayContent h1 {
     max-width: 70%;
     font-size: 20px;
   }
+
   .overlayContent p {
     font-size: 12px;
   }
+
   .carousel-item img {
     height: fit-content !important;
     object-fit: cover;
   }
+
   .stats-container {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
   }
+
   .slick-next {
     right: 0 !important;
   }
+
   .slick-prev {
     left: 0 !important;
     z-index: 99;
   }
+
   .product-card {
     width: 96%;
     padding: 20px 5px;
     margin-top: 5rem;
     height: fit-content;
   }
+
   .fruitvegitabls1 .overlay .firstCol {
     width: 100%;
   }
-  .responsiveHeaderTop input[type="search"]{
+
+  .responsiveHeaderTop input[type="search"] {
     margin-bottom: 0;
   }
-  .add-to-cart{
+
+  .add-to-cart {
     max-width: fit-content;
     font-size: 12px;
   }
+
   .product-image {
     margin: auto;
     position: absolute;
@@ -487,63 +554,78 @@ select:focus-visible {
     left: 17%;
     width: 100px;
     height: 100px;
-}
-  .product-image img{
+  }
+
+  .product-image img {
     width: 100px;
     top: -70px;
     left: 25px;
   }
-  .product-title{
+
+  .product-title {
     font-size: 12px;
     width: 100%;
   }
-  select{
+
+  select {
     margin-bottom: 5px;
     padding: 0 !important;
     font-size: 12px;
   }
-  .current-price{
+
+  .current-price {
     font-size: 12px;
   }
-  .original-price{
+
+  .original-price {
     font-size: 12px;
   }
+
   .hero-product {
     padding: 20px 0px;
   }
-  .hero-product, .grocery {
+
+  .hero-product,
+  .grocery {
     padding: 1rem 0rem;
   }
-  
-  .grocery h2{
+
+  .grocery h2 {
     font-size: 24px;
   }
+
   .headings h2 {
     font-size: 25px;
   }
 
-  .slick-list{
+  .slick-list {
     padding: 15px 0;
   }
+
   .subscribes .container {
-  padding: 1rem;
+    padding: 1rem;
   }
+
   .subscribes {
     padding: 0;
   }
+
   .article {
     padding: 0;
   }
-  .productName{
+
+  .productName {
     display: block;
     margin: 0;
   }
+
   .pot-label {
     font-size: 12px;
     margin: 0;
   }
+
   .price {
     width: 50%;
   }
-  
+
 }

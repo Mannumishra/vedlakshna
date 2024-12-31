@@ -44,14 +44,14 @@ const Cart = () => {
     return cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2);
   };
 
-    // Function to handle checkout redirect
-    const handleCheckout = () => {
-      if (loginValue) {
-        navigate("/product/product-details/cart/checkout");
-      } else {
-        navigate("/login", { state: { from: "/product/product-details/cart/checkout" } });
-      }
-    };
+  // Function to handle checkout redirect
+  const handleCheckout = () => {
+    if (loginValue) {
+      navigate("/product/product-details/cart/checkout");
+    } else {
+      navigate("/login", { state: { from: "/product/product-details/cart/checkout" } });
+    }
+  };
   return (
     <>
       <Helmet>
@@ -62,12 +62,13 @@ const Cart = () => {
       <section className="minibreadCrumb">
         <div className="container">
           <div className="row">
-            <div className="col-md-6">
+            <div className="col-md-12">
               <Link to="/all-products" className="back-icon text-decoration-none text-black d-flex align-items-center gap-2">
                 <i className="bi bi-arrow-left text-black"></i> Back to category
               </Link>
             </div>
-            <div className="col-md-6">
+
+            <div className="col-md-12">
               <div className="text-black d-flex justify-content-end gap-2">
                 <Link className="text-black" to="/">
                   <i className="bi bi-house"></i>
@@ -83,6 +84,9 @@ const Cart = () => {
       </section>
       <section className="cart">
         <div className="container">
+          <div className="col-md-12">
+            <h3 className="text-center mb-5" style={{color:"#F58634"}}>Buy items worth <strong>₹6000</strong> or more to get free delivery!</h3>
+          </div>
           <h2>Shopping Cart</h2>
           <div className="table-responsive">
             <table className="table table-bordered" style={{ borderColor: "var(--themeColor)" }}>
@@ -100,7 +104,7 @@ const Cart = () => {
               <tbody>
                 {cartItems.length > 0 ? (
                   cartItems.map((item, index) => (
-                    <tr  key={item.productId}>
+                    <tr key={item.productId}>
                       <td className="text-center">
                         <img src={item.productImage} alt="Product" width="100" />
                       </td>
