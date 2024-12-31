@@ -80,34 +80,40 @@ const Checkout = () => {
 
   const calculateCartSummary = async (cartItems) => {
     let tempSubtotal = 0;
+
+    // Calculate the subtotal
     cartItems.forEach(item => {
       tempSubtotal += item.price * item.quantity;
     });
     setSubtotal(tempSubtotal);
 
     const pincode = shippingAddress.postalCode;
-    if (pincode) {
+
+    // Set shipping charge based on subtotal or pincode
+    if (tempSubtotal >= 6000) {
+      setShipping(0); // Free shipping for subtotal >= 6000
+    } else if (pincode) {
       try {
         const response = await axios.get("https://api.panchgavyamrit.com/api/all-pincode");
-        console.log(response)
         const pinCodeData = response.data.find(item => item.pincode === parseInt(pincode));
         if (pinCodeData) {
-          console.log("Shipping charge for pincode:", pinCodeData.shippingCharge); // Check if the data is correct
+          console.log("Shipping charge for pincode:", pinCodeData.shippingCharge); // Debug log
           setShipping(pinCodeData.shippingCharge);
         } else {
-          setShipping(500); // Default shipping if pincode is not found
+          setShipping(200); // Default shipping if pincode is not found
         }
       } catch (error) {
         console.error("Error fetching shipping charge:", error);
-        setShipping(500); // Fallback shipping charge in case of an error
+        setShipping(200); // Fallback shipping charge in case of an error
       }
     } else {
-      setShipping(500); // Default shipping if no pincode is provided
+      setShipping(200); // Default shipping if no pincode is provided
     }
 
     // Calculate total with shipping charge
-    setTotal(tempSubtotal + shipping);
+    setTotal(tempSubtotal + (tempSubtotal >= 6000 ? 0 : shipping));
   };
+
 
 
   const navigate = useNavigate();

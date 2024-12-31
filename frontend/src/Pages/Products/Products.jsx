@@ -131,21 +131,33 @@ const Products = () => {
                       <div className="productName">
                         <h3 className="product-title">{product.productName}</h3>
                         <div className="price">
-                          <span className="current-price">
-                            <del> &#8377;
-                              {selectedWeights[product._id]?.originalPrice ||
-                                product.productInfo[0].productPrice}</del>
-                          </span> <br />
-                          <span className="current-price text-danger">
-                            Off {selectedWeights[product._id]?.productDiscountPercentage ||
-                              product.productInfo[0].productDiscountPercentage} %
-                          </span> <br />
+                          {selectedWeights[product._id]?.productDiscountPercentage > 0 ||
+                            product.productInfo[0].productDiscountPercentage > 0 ? (
+                            <>
+                              <span className="current-price">
+                                <del>
+                                  &#8377;
+                                  {selectedWeights[product._id]?.originalPrice ||
+                                    product.productInfo[0].productPrice}
+                                </del>
+                              </span>
+                              <br />
+                              <span className="current-price text-danger">
+                                Off{" "}
+                                {selectedWeights[product._id]?.productDiscountPercentage ||
+                                  product.productInfo[0].productDiscountPercentage}{" "}
+                                %
+                              </span>
+                              <br />
+                            </>
+                          ) : null}
                           <span className="current-price">
                             &#8377;
                             {selectedWeights[product._id]?.price ||
                               product.productInfo[0].productFinalPrice}
                           </span>
                         </div>
+
                       </div>
                       <label
                         htmlFor={`pot-${product._id}`}

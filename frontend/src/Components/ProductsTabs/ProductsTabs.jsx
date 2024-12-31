@@ -139,7 +139,7 @@ const ProductsTabs = () => {
                 key={category._id}
                 className={`tab-button ${activeTab === category._id ? "active" : ""}`}
                 onClick={() => setActiveTab(category._id)}
-                style={{ textTransform: "capitalize" , fontSize:'14px' }}
+                style={{ textTransform: "capitalize", fontSize: '14px' }}
               >
                 {category.categoryName}
               </button>
@@ -169,20 +169,27 @@ const ProductsTabs = () => {
                       <div className="productName">
                         <h3 className="product-title">{truncateText(product.productName, 3)}</h3>
                         <div className="price text-end">
-                          <span className="current-price">
-                            <del>  ₹ {selectedProductInfo?.productPrice || "0.00"}</del>
-                          </span> <br />
-                          {/* {selectedProductInfo?.productDiscountPercentage && ( */}
-                            <span className="discount-price text-danger">
-                              Off {selectedProductInfo.productDiscountPercentage} %
-                            </span>
-                           <br />
-                          {selectedProductInfo?.productFinalPrice && (
-                            <span className="current-price">
-                              ₹ {selectedProductInfo.productFinalPrice}
-                            </span>
+                          {selectedProductInfo?.productDiscountPercentage > 0 ? (
+                            <>
+                              <span className="current-price">
+                                <del>₹ {selectedProductInfo?.productPrice || "0.00"}</del>
+                              </span>
+                              <br />
+                              <span className="discount-price text-danger">
+                                Off {selectedProductInfo.productDiscountPercentage} %
+                              </span>
+                              <br />
+                              {selectedProductInfo?.productFinalPrice && (
+                                <span className="current-price">₹ {selectedProductInfo.productFinalPrice}</span>
+                              )}
+                            </>
+                          ) : (
+                            selectedProductInfo?.productFinalPrice && (
+                              <span className="current-price">₹ {selectedProductInfo.productFinalPrice}</span>
+                            )
                           )}
                         </div>
+
                       </div>
                       {/* </Link> */}
                       <label
