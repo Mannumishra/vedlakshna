@@ -12,7 +12,7 @@ const AllOrder = () => {
     // Fetch data from API
     const fetchOrders = async () => {
         try {
-            const response = await axios.get('https://api.panchgavyamrit.com/api/order-data');
+            const response = await axios.get('http://localhost:8000/api/order-data');
             if (response.status === 200) {
                 setOrders(response.data.data);
             } else {
@@ -42,7 +42,7 @@ const AllOrder = () => {
             });
     
             if (result.isConfirmed) {
-                const response = await axios.delete(`https://api.panchgavyamrit.com/api/delete-order-data/${orderId}`);
+                const response = await axios.delete(`http://localhost:8000/api/delete-order-data/${orderId}`);
                 if (response.status === 200) {
                     toast.success('Order deleted successfully!');
                     fetchOrders(); // Refetch orders after deletion

@@ -10,7 +10,7 @@ const AllProduct = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('https://api.panchgavyamrit.com/api/get-product');
+                const response = await axios.get('http://localhost:8000/api/get-product');
                 console.log(response)
                 setData(response.data.products); // Assuming the response contains a 'products' array
             } catch (error) {
@@ -34,7 +34,7 @@ const AllProduct = () => {
             });
 
             if (result.isConfirmed) {
-                const response = await axios.delete(`https://api.panchgavyamrit.com/api/delete-product/${productId}`);
+                const response = await axios.delete(`http://localhost:8000/api/delete-product/${productId}`);
                 toast.success('Product deleted successfully');
                 setData(data.filter(item => item._id !== productId)); // Remove deleted product from state
             }
@@ -46,7 +46,7 @@ const AllProduct = () => {
 
     const handleStatusChange = async (productId, field, currentValue) => {
         try {
-            const response = await axios.put(`https://api.panchgavyamrit.com/api/update-product/${productId}`, {
+            const response = await axios.put(`http://localhost:8000/api/update-product/${productId}`, {
                 [field]: !currentValue, // Dynamically set the field to update
             });
             toast.success(`${field === 'productStatus' ? 'Product status' : 'Bestseller status'} updated successfully`);

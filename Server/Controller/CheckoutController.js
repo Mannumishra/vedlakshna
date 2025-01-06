@@ -3,12 +3,95 @@ const Razorpay = require('razorpay');
 const crypto = require('crypto');
 const axios = require("axios");
 const CupanCode = require("../Models/VouchersModel");
+const { transporter } = require("../utils/Nodemailer");
 
 const razorpayInstance = new Razorpay({
     key_id: 'rzp_live_FjN3xa6p5RsEl6',
     key_secret: 'CrSeAmgW4PgPIKzsNOaqL7QB',
 });
 
+// Helper function for email template
+const getOrderEmailTemplate = (checkout) => {
+    const orderDetails = checkout.products.map(item => `
+        <tr style="border-bottom: 1px solid #ddd; padding: 10px;">
+            <td style="padding: 10px; text-align: left;">${item.productName}</td>
+            <td style="padding: 10px; text-align: center;">${item.quantity}</td>
+            <td style="padding: 10px; text-align: center;">₹${item.price}</td>
+            <td style="padding: 10px; text-align: center;">
+                <img src="${item.productImage}" alt="${item.productName}" width="80" height="80" style="border-radius: 8px;">
+            </td>
+        </tr>
+    `).join('');
+
+    const couponDetails = checkout.cupanCode ? `
+        <tr style="background-color: #f5f5f5;">
+            <td colspan="3" style="text-align: left; padding: 10px;"><strong>Coupon Code:</strong> ${checkout.cupanCode}</td>
+            <td style="text-align: center; padding: 10px;"><strong>Discount:</strong> ₹${checkout.discountCupan}</td>
+        </tr>
+    ` : "<tr><td colspan='4' style='padding: 10px;'>No coupon used</td></tr>";
+
+    return `
+        <html>
+        <head>
+            <style>
+                body { font-family: Arial, sans-serif; background-color: #f4f7fc; color: #333; }
+                .container { width: 80%; margin: 0 auto; background-color: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); }
+                .header { text-align: center; margin-bottom: 20px; }
+                .header img { width: 150px; height: 150px; }
+                .header h2 { color: #4CAF50; }
+                .section { margin-bottom: 20px; }
+                .table { width: 100%; border-collapse: collapse; }
+                th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
+                th { background-color: #f2f2f2; }
+                .footer { text-align: center; margin-top: 20px; font-size: 14px; }
+                .footer a { color: #4CAF50; text-decoration: none; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <div class="header">
+                    <img src="https://panchgavyamrit.com/static/media/Logo.e4770e51e9e2f1f1d58d.png" alt="Vedlakshna Logo">
+                    <h2>New Order Received - Vedlakshna</h2>
+                </div>
+                <div class="section">
+                    <h3>Order Information:</h3>
+                    <p><strong>Order ID:</strong> ${checkout._id}</p>
+                    <p><strong>User:</strong> ${checkout.userId}</p>
+                    <p><strong>Shipping Address:</strong> ${checkout.shippingAddress.address}, ${checkout.shippingAddress.city}, ${checkout.shippingAddress.state}, ${checkout.shippingAddress.postalCode}</p>
+                    <p><strong>Payment Method:</strong> ${checkout.paymentMethod}</p>
+                </div>
+                <div class="section">
+                    <h3>Ordered Products:</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th>Image</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${orderDetails}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="section">
+                    ${couponDetails}
+                </div>
+                <div class="section">
+                    <p><strong>Total Amount:</strong> ₹${checkout.totalAmount}</p>
+                    <p><strong>Shipping Cost:</strong> ₹${checkout.shippingCost}</p>
+                </div>
+                <div class="footer">
+                    <p>Thank you for your business!</p>
+                    <p>If you have any questions, feel free to <a href="mailto:support@vedlakshna.com">contact us</a>.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+};
 exports.checkout = async (req, res) => {
     console.log(req.body);
     const { userId, products, shippingAddress, paymentMethod, cupanCode } = req.body;
@@ -21,7 +104,7 @@ exports.checkout = async (req, res) => {
     // Fetch shipping charge based on pincode
     if (pincode) {
         try {
-            const response = await axios.get("https://api.panchgavyamrit.com/api/all-pincode");
+            const response = await axios.get("http://localhost:8000/api/all-pincode");
             const pinCodeData = response.data.find(item => item.pincode === parseInt(pincode));
             if (pinCodeData) {
                 shippingCost = pinCodeData.shippingCharge;
@@ -94,6 +177,14 @@ exports.checkout = async (req, res) => {
 
             await checkout.save();
 
+            // Send welcome email
+            await transporter.sendMail({
+                from: "Panchgavya.amrit@gmail.com",
+                to: "Panchgavya.amrit@gmail.com",
+                subject: "New Order Received from Vedlakshna",
+                html: getOrderEmailTemplate(checkout)
+            });
+
             return res.status(201).json({
                 message: 'Checkout successful. Payment initiated via Razorpay.',
                 checkout,
@@ -102,6 +193,14 @@ exports.checkout = async (req, res) => {
         }
 
         await checkout.save();
+        // Send welcome email
+        await transporter.sendMail({
+            from: "Panchgavya.amrit@gmail.com",
+            to: "Panchgavya.amrit@gmail.com",
+            subject: "New Order Received from Vedlakshna",
+            html: getOrderEmailTemplate(checkout)
+        });
+
         res.status(201).json({ message: 'Checkout successful', checkout });
 
     } catch (error) {

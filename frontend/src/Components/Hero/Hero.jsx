@@ -28,7 +28,7 @@ const Hero = () => {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          "https://api.panchgavyamrit.com/api/all-banner"
+          "http://localhost:8000/api/all-banner"
         );
         const newData = response.data.banners;
         const filterData = newData.filter((x) => x.bannerStatus === true);
@@ -47,7 +47,7 @@ const Hero = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
-        "https://api.panchgavyamrit.com/api/get-product"
+        "http://localhost:8000/api/get-product"
       );
       const productRecord = response.data.products;
       const filterbestseller = productRecord.filter(
