@@ -10,28 +10,48 @@ import Swal from 'sweetalert2';
 const Checkout = () => {
   const userId = sessionStorage.getItem("userId")
   const [userData, setUserData] = useState({})
+  const [applycupanValue, setApplycupanValue] = useState()
   const [cartItems, setCartItems] = useState([]);
   const [subtotal, setSubtotal] = useState(0);
   const [shipping, setShipping] = useState(0);
   const [total, setTotal] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState("Online");
+  const [cupanCode, setCupanCode] = useState([])
+  const [discount, setDiscount] = useState(0);
 
 
-  const getApiData = async () => {
-    try {
-      const res = await axios.get("https://api.panchgavyamrit.com/api/get-user/" + userId)
-      console.log(res)
-      if (res.status === 200) {
-        setUserData(res.data.data)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
 
   useEffect(() => {
-    getApiData()
-  }, [])
+    const getCupancode = async () => {
+      try {
+        const res = await axios.get("http://localhost:8000/api/all-vouchers");
+        if (res.status === 200) {
+          setCupanCode(res.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching coupons:", error);
+      }
+    };
+    getCupancode();
+
+    const getApiData = async () => {
+      try {
+        const res = await axios.get(`https://api.panchgavyamrit.com/api/get-user/${userId}`);
+        if (res.status === 200) {
+          setUserData(res.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+    getApiData();
+
+    const savedCartItems = JSON.parse(sessionStorage.getItem("VesLakshna")) || [];
+    setCartItems(savedCartItems);
+    calculateCartSummary(savedCartItems);
+  }, []);
+
+
 
   const [shippingAddress, setShippingAddress] = useState({
     name: userData.name,
@@ -71,17 +91,15 @@ const Checkout = () => {
     }
   }, [shippingAddress.postalCode, cartItems]);
 
-  // Recalculate total whenever subtotal or shipping changes
   useEffect(() => {
     if (subtotal && shipping !== null) {
-      setTotal(subtotal + shipping);
+      setTotal(subtotal + shipping - discount);
     }
-  }, [subtotal, shipping]);
+  }, [subtotal, shipping, discount]);
 
   const calculateCartSummary = async (cartItems) => {
     let tempSubtotal = 0;
 
-    // Calculate the subtotal
     cartItems.forEach(item => {
       tempSubtotal += item.price * item.quantity;
     });
@@ -89,31 +107,40 @@ const Checkout = () => {
 
     const pincode = shippingAddress.postalCode;
 
-    // Set shipping charge based on subtotal or pincode
     if (tempSubtotal >= 6000) {
-      setShipping(0); // Free shipping for subtotal >= 6000
+      setShipping(0);
     } else if (pincode) {
       try {
         const response = await axios.get("https://api.panchgavyamrit.com/api/all-pincode");
         const pinCodeData = response.data.find(item => item.pincode === parseInt(pincode));
         if (pinCodeData) {
-          console.log("Shipping charge for pincode:", pinCodeData.shippingCharge); // Debug log
+          console.log("Shipping charge for pincode:", pinCodeData.shippingCharge);
           setShipping(pinCodeData.shippingCharge);
         } else {
-          setShipping(200); // Default shipping if pincode is not found
+          setShipping(200);
         }
       } catch (error) {
         console.error("Error fetching shipping charge:", error);
-        setShipping(200); // Fallback shipping charge in case of an error
+        setShipping(200);
       }
     } else {
-      setShipping(200); // Default shipping if no pincode is provided
+      setShipping(200);
     }
 
-    // Calculate total with shipping charge
     setTotal(tempSubtotal + (tempSubtotal >= 6000 ? 0 : shipping));
   };
 
+
+  const validateCouponCode = () => {
+    const validCoupon = cupanCode.find(coupon => coupon.code === applycupanValue && coupon.vouchersStatus);
+    if (validCoupon) {
+      const discountAmount = (subtotal * validCoupon.discount) / 100;
+      setDiscount(discountAmount);
+      Swal.fire("Success", `Coupon applied! You saved ₹${discountAmount.toFixed(2)}.`, "success");
+    } else {
+      Swal.fire("Error", "Invalid or expired coupon code.", "error");
+    }
+  };
 
 
   const navigate = useNavigate();
@@ -364,6 +391,16 @@ const Checkout = () => {
                       </tr>
                     </tbody>
                   </table>
+                </div>
+                <div style={{ display: "flex" }}>
+                  <input
+                    type="text"
+                    name="applycupanValue"
+                    onChange={(e) => setApplycupanValue(e.target.value)}
+                    placeholder="Coupon Code"
+                  />{" "}
+                  &nbsp;
+                  <button className="add-to-cart" onClick={validateCouponCode}>Apply</button>
                 </div>
                 <div className="form-group">
                   <label htmlFor="payment-method">Payment Method</label>

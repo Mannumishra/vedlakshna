@@ -14,7 +14,7 @@ exports.checkout = async (req, res) => {
 
     const pincode = shippingAddress.postalCode;
     const subtotal = products.reduce((total, item) => total + (item.price * item.quantity), 0);
-    let shippingCost = 500;
+    let shippingCost = 200;
     if (pincode) {
         try {
             const response = await axios.get("https://api.panchgavyamrit.com/api/all-pincode");

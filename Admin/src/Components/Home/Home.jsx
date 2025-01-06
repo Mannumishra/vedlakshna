@@ -26,10 +26,13 @@ import AllPincode from '../../Pages/PinCode/AllPincode'
 import AddPincode from '../../Pages/PinCode/AddPincode'
 import EditPincode from '../../Pages/PinCode/EditPincode'
 import AllContactInquery from '../../Pages/ContactInquery/AllContactInquery'
+import AllVouchers from '../../Pages/Vouchers/AllVouchers'
+import AddVouchers from '../../Pages/Vouchers/AddVouchers'
+import Editvouchers from '../../Pages/Vouchers/Editvouchers'
 
 const Home = () => {
-  const loginValue = localStorage.getItem("login")
-  // const loginValue = true
+  // const loginValue = localStorage.getItem("login")
+  const loginValue = true
   return (
     <>
       {
@@ -75,6 +78,11 @@ const Home = () => {
               <Route path={"/all-shop-banners"} element={<AllShopBanner />} />
               <Route path={"/add-shop-banner"} element={<AddShopBanner />} />
               <Route path={"/edit-shop-banner/:id"} element={<EditShopBanner />} />
+
+              {/* --- Banners --- */}
+              <Route path={"/all-vouchers"} element={<AllVouchers />} />
+              <Route path={"/add-vouchers"} element={<AddVouchers />} />
+              <Route path={"/edit-vouchers/:id"} element={<Editvouchers />} />
 
               {/* --- Orders --- */}
               <Route path={"/all-orders"} element={<AllOrder />} />

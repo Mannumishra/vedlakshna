@@ -19,6 +19,7 @@ const CheckoutRouter = require("./Routes/CheckoutRouter");
 const BannerRouter = require("./Routes/BannerRouter");
 const PincodeRouter = require("./Routes/PincodeRouter");
 const ContactRouter = require("./Routes/contactRoutes");
+const VouchersRouter = require("./Routes/VouchersRouter");
 
 const app = express();
 
@@ -82,6 +83,7 @@ app.use("/api", CheckoutRouter);
 app.use("/api", BannerRouter);
 app.use("/api", PincodeRouter);
 app.use("/api", ContactRouter);
+app.use("/api", VouchersRouter);
 
 // Start the server
 app.listen(process.env.PORT, () => {
