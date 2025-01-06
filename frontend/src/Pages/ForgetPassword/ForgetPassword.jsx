@@ -133,6 +133,9 @@ const ForgetPassword = () => {
             </div>
           </div>
 
+
+          
+
           {message && <div className="alert alert-info">{message}</div>} {/* Display success/error message */}
 
           {/* OTP Modal */}
