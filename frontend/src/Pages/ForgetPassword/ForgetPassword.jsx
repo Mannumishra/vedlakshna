@@ -4,6 +4,7 @@ import "./forgetpassword.css";
 import { Helmet } from "react-helmet";
 import axios from 'axios'; // Import axios for making API requests
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 const ForgetPassword = () => {
   useEffect(() => {
@@ -127,6 +128,7 @@ const ForgetPassword = () => {
                   Enter the e-mail address associated with your account. Click
                   submit to have a password reset link e-mailed to you.
                 </p>
+                <Link to={'/login'} className="add-to-cart">Go To Login</Link>
               </div>
             </div>
           </div>

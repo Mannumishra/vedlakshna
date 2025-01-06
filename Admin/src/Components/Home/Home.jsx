@@ -31,8 +31,8 @@ import AddVouchers from '../../Pages/Vouchers/AddVouchers'
 import Editvouchers from '../../Pages/Vouchers/Editvouchers'
 
 const Home = () => {
-  // const loginValue = localStorage.getItem("login")
-  const loginValue = true
+  const loginValue = localStorage.getItem("login")
+  // const loginValue = true
   return (
     <>
       {
