@@ -29,11 +29,14 @@ import AllContactInquery from '../../Pages/ContactInquery/AllContactInquery'
 import AllVouchers from '../../Pages/Vouchers/AllVouchers'
 import AddVouchers from '../../Pages/Vouchers/AddVouchers'
 import Editvouchers from '../../Pages/Vouchers/Editvouchers'
+import AllArtical from '../../Pages/Articals/AllArtical'
+import AddArtical from '../../Pages/Articals/AddArtical'
+import EditArtical from '../../Pages/Articals/EditArtical'
 
 const Home = () => {
   const loginValue = localStorage.getItem("login")
 
-  
+
   return (
     <>
       {
@@ -58,6 +61,10 @@ const Home = () => {
               <Route path={"/add-product"} element={<AddProduct />} />
               <Route path={"/edit-product/:id"} element={<EditProduct />} />
 
+              {/* articals --  */}
+              <Route path={"/all-articals"} element={<AllArtical />} />
+              <Route path={"/add-artical"} element={<AddArtical />} />
+              <Route path={"/edit-artical/:id"} element={<EditArtical />} />
 
               {/* --- Orders --- */}
               <Route path={"/all-users"} element={<AllUsers />} />

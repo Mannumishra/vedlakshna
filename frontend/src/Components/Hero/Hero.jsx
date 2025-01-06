@@ -218,56 +218,20 @@ const Hero = () => {
     return text;
   }
 
-  const articleArr = [
-    {
-      image: article1,
-      title: "Convenience at Your Doorstep",
-      desc: "Convenience is the name of the game when it comes to minimarkets. Well discuss how these compact stores save you time and effort, providing a quick and hassle-free shopping experience, with extended hours and a curated selection of essential products...",
-      date: "13 Dec, 2022",
-    },
-    {
-      image: article2,
-      title: "Beyond the Basics",
-      desc: "While minimarkets excel at providing everyday essentials, they often surprise customers with additional services. Well explore offerings such as bill payment facilities, money transfer services, and even niche products like specialty coffees or fresh...",
-      date: "13 Dec, 2022",
-    },
-    {
-      image: article3,
-      title: "Supporting Local Suppliers",
-      desc: "Discover the role minimarkets play in supporting local farmers, growers, and suppliers. Well showcase how these small-scale businesses prioritize sourcing from nearby producers, contributing to the local economy and fostering sustainable practices...",
-      date: "13 Dec, 2022",
-    },
-    {
-      image: article4,
-      title: "Fresh Fruits and Healthy Options",
-      desc: "Well delve deeper into the fruit category, highlighting the variety of fresh fruits available at minimarkets. Learn about the benefits of shopping locally for seasonal produce, discover tips for selecting the ripest fruits ...",
-      date: "13 Dec, 2022",
-    },
-    {
-      image: article1,
-      title: "Convenience at Your Doorstep",
-      desc: "Convenience is the name of the game when it comes to minimarkets. Well discuss how these compact stores save you time and effort, providing a quick and hassle-free shopping experience, with extended hours and a curated selection of essential products...",
-      date: "13 Dec, 2022",
-    },
-    {
-      image: article2,
-      title: "Beyond the Basics",
-      desc: "While minimarkets excel at providing everyday essentials, they often surprise customers with additional services. Well explore offerings such as bill payment facilities, money transfer services, and even niche products like specialty coffees or fresh...",
-      date: "13 Dec, 2022",
-    },
-    {
-      image: article3,
-      title: "Supporting Local Suppliers",
-      desc: "Discover the role minimarkets play in supporting local farmers, growers, and suppliers. Well showcase how these small-scale businesses prioritize sourcing from nearby producers, contributing to the local economy and fostering sustainable or practices...",
-      date: "13 Dec, 2022",
-    },
-    {
-      image: article4,
-      title: "Fresh Fruits and Healthy Options",
-      desc: "Well delve deeper into the fruit category, highlighting the variety of fresh fruits available at minimarkets. Learn about the benefits of shopping locally for seasonal produce, discover tips for selecting the ripest fruits, and explore creative ways ...",
-      date: "13 Dec, 2022",
-    },
-  ];
+  const [articleArr, setArticleArr] = useState([]);
+
+  const getArticalsData = async () => {
+    try {
+      const res = await axios.get("https://api.panchgavyamrit.com/api/all-articals")
+      setArticleArr(res.data); // Assuming the API returns an array of articles
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    getArticalsData()
+  }, [])
 
   return (
     <>
@@ -610,9 +574,16 @@ const Hero = () => {
                     <div>
                       <div className="article_card">
                         <img src={item.image} alt="" />
-                        <h5>{truncateText(item.title, 2)}</h5>
-                        <p>{truncateText(item.desc, 15)}</p>
-                        <p className="date">{item.date}</p>
+                        <h5>
+                          {item.name.length > 40 ? `${item.name.slice(0, 40)}...` : item.name}
+                        </h5>
+
+                        <p>
+                          {item.descrition.length > 150
+                            ? `${item.descrition.slice(0, 150)}...`
+                            : item.descrition}
+                        </p>
+                        {/* <p className="date">{item.date}</p> */}
                         {/* <div className="d-flex justify-start">
                           <Link className="button_" to="">
                             Read More

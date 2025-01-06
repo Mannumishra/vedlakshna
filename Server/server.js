@@ -20,6 +20,8 @@ const BannerRouter = require("./Routes/BannerRouter");
 const PincodeRouter = require("./Routes/PincodeRouter");
 const ContactRouter = require("./Routes/contactRoutes");
 const VouchersRouter = require("./Routes/VouchersRouter");
+const ArticalRouter = require("./Routes/ArticalRouter");
+const SubcribeRouter = require("./Routes/subscribeRoutes");
 
 const app = express();
 
@@ -84,6 +86,8 @@ app.use("/api", BannerRouter);
 app.use("/api", PincodeRouter);
 app.use("/api", ContactRouter);
 app.use("/api", VouchersRouter);
+app.use("/api", ArticalRouter);
+app.use("/api", SubcribeRouter);
 
 // Start the server
 app.listen(process.env.PORT, () => {

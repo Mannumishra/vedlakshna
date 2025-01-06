@@ -63,6 +63,7 @@ const Header = () => {
             <li className={isActive('/all-category') || isActive("/add-category") || isActive("/edit-category") ? 'active' : ''} ><Link to="/all-category" onClick={handletoggleBtn}> <i class="fa-solid fa-list"></i> Manage Category</Link></li>
             {/* <li><Link to="/all-subcategory" onClick={handletoggleBtn}> <i class="fa-solid fa-tag"></i> Manage SubCategory</Link></li> */}
             <li className={isActive('/all-products') || isActive("/add-product") || isActive("/edit-produc") ? 'active' : ''} ><Link to="/all-products" onClick={handletoggleBtn}> <i class="fa-solid fa-box"></i> Manage Product</Link></li>
+            <li className={isActive('/all-articals') || isActive("/add-artical") || isActive("/edit-artical") ? 'active' : ''} ><Link to="/all-articals" onClick={handletoggleBtn}> <i class="fa-solid fa-box"></i> Manage Articals</Link></li>
             <li className={isActive('/all-vouchers') || isActive("/add-vouchers") || isActive("/edit-vouchers") ? 'active' : ''} ><Link to="/all-vouchers" onClick={handletoggleBtn}> <i class="fa-solid fa-box"></i> Manage Vouchers</Link></li>
             <li className={isActive('/all-pincodes') || isActive("/add-pincode") || isActive("/edit-pincode") ? 'active' : ''}><Link to="/all-pincodes" onClick={handletoggleBtn}> <i class="fa-solid fa-location-dot"></i> Manage Pincode</Link></li>
             <li className={isActive('/all-users') ? 'active' : ''} ><Link to="/all-users" onClick={handletoggleBtn}> <i class="fa-solid fa-users"></i> All Users</Link></li>
