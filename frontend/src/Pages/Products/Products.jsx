@@ -15,7 +15,9 @@ const Products = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("https://api.panchgavyamrit.com/api/all-category");
+        const response = await axios.get(
+          "https://api.panchgavyamrit.com/api/all-category"
+        );
         const fetchedCategories = response.data;
         setCategories(fetchedCategories);
 
@@ -34,11 +36,30 @@ const Products = () => {
 
   const fetchProducts = async (categoryId) => {
     try {
-      const response = await axios.get("https://api.panchgavyamrit.com/api/get-product");
+      const response = await axios.get(
+        "https://api.panchgavyamrit.com/api/get-product"
+      );
       const filteredProducts = response.data.products.filter(
         (product) => product.categoryName._id === categoryId
       );
+
+      // Set default weights for each product
+      const defaultWeights = {};
+      filteredProducts.forEach((product) => {
+        if (product.productInfo.length > 0) {
+          const defaultInfo = product.productInfo[0];
+          defaultWeights[product._id] = {
+            weight: defaultInfo.productweight,
+            price: defaultInfo.productFinalPrice,
+            originalPrice: defaultInfo.productPrice,
+            productDiscountPercentage: defaultInfo.productDiscountPercentage,
+            stock: defaultInfo.stock,
+          };
+        }
+      });
+
       setProducts(filteredProducts);
+      setSelectedWeights(defaultWeights);
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -50,7 +71,9 @@ const Products = () => {
   };
 
   const handleWeightChange = (productId, productWeight) => {
-    const selectedProduct = products.find((product) => product._id === productId);
+    const selectedProduct = products.find(
+      (product) => product._id === productId
+    );
     const productInfo = selectedProduct?.productInfo.find(
       (info) => info.productweight === productWeight
     );
@@ -119,7 +142,10 @@ const Products = () => {
             <div className="col-md-9 all-products product-top-spacing">
               <div className="row">
                 {products.map((product) => (
-                  <div key={product._id} className="col-md-4 col-6 pruduct-spacing">
+                  <div
+                    key={product._id}
+                    className="col-md-4 col-6 pruduct-spacing"
+                  >
                     <div className="product-card-page">
                       <div className="product-image-product">
                         <img
@@ -131,21 +157,26 @@ const Products = () => {
                       <div className="productName">
                         <h3 className="product-title">{product.productName}</h3>
                         <div className="price">
-                          {selectedWeights[product._id]?.productDiscountPercentage > 0 ||
-                            product.productInfo[0].productDiscountPercentage > 0 ? (
+                          {selectedWeights[product._id]
+                            ?.productDiscountPercentage > 0 ||
+                          product.productInfo[0].productDiscountPercentage >
+                            0 ? (
                             <>
                               <span className="current-price">
                                 <del>
                                   &#8377;
-                                  {selectedWeights[product._id]?.originalPrice ||
+                                  {selectedWeights[product._id]
+                                    ?.originalPrice ||
                                     product.productInfo[0].productPrice}
                                 </del>
                               </span>
                               <br />
                               <span className="current-price text-danger">
                                 Off{" "}
-                                {selectedWeights[product._id]?.productDiscountPercentage ||
-                                  product.productInfo[0].productDiscountPercentage}{" "}
+                                {selectedWeights[product._id]
+                                  ?.productDiscountPercentage ||
+                                  product.productInfo[0]
+                                    .productDiscountPercentage}{" "}
                                 %
                               </span>
                               <br />
@@ -157,7 +188,6 @@ const Products = () => {
                               product.productInfo[0].productFinalPrice}
                           </span>
                         </div>
-
                       </div>
                       <label
                         htmlFor={`pot-${product._id}`}
@@ -171,20 +201,18 @@ const Products = () => {
                         onChange={(e) =>
                           handleWeightChange(product._id, e.target.value)
                         }
-                        defaultValue=""
+                        value={selectedWeights[product._id]?.weight || ""}
                       >
-                        <option value="" disabled>
-                          --- Please Select ---
-                        </option>
                         {product.productInfo.map((info) => (
                           <option
-                            key={info.productweight}
+                            key={info.productweight[0]}
                             value={info.productweight}
                           >
                             {info.productweight}
                           </option>
                         ))}
                       </select>
+
                       <button
                         onClick={() => handleViewDetails(product._id)}
                         className="add-to-cart"

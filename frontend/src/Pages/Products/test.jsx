@@ -358,9 +358,6 @@ const Hero = () => {
                       }
                       defaultValue=""
                     >
-                      <option value="" disabled>
-                        --- Please Select ---
-                      </option>
                       {product.productInfo.map((info) => (
                         <option
                           key={info.productweight}
@@ -511,11 +508,6 @@ const Hero = () => {
                         <h5>{truncateText(item.title, 2)}</h5>
                         <p>{truncateText(item.desc, 15)}</p>
                         <p className="date">{item.date}</p>
-                        {/* <div className="d-flex justify-start">
-                          <Link className="button_" to="">
-                            Read More
-                          </Link>
-                        </div> */}
                       </div>
                     </div>
                   ))}

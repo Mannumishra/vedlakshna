@@ -12,8 +12,8 @@ const SubscribeForm = () => {
               <p>
                 To subscribe to our newsletter, simply visit our website or ask
                 one of our friendly staff members during your next visit to our
-                MiniMarket. Stay connected, stay informed, and enjoy all the
-                benefits that come with being part of our MiniMarket community.
+                Our Store. Stay connected, stay informed, and enjoy all the
+                benefits that come with being part of our Our Store community.
               </p>
               <input
                 type="text"

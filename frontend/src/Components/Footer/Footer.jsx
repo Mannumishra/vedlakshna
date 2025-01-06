@@ -29,7 +29,7 @@ const Footer = () => {
               Discover the best deals and quality products at our store. We
               bring premium e-commerce services to your fingertips.
             </p>
-            <p>Monday - Friday: 8:00 AM - 9:00 PM</p>
+            <p>We're open 7 days a week Enquiries Timing: 8 AM to 8 PM</p>
           </div>
 
           {/* Shop Links */}

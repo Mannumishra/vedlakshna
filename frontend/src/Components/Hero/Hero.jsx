@@ -13,7 +13,7 @@ import SubscribeForm from "../SubscribeForm/SubscribeForm";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import offer from '../../images/offers.jpeg'
+import offer from "../../images/offers.jpeg";
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -21,17 +21,19 @@ const Hero = () => {
   const [inView, setInView] = useState(false);
   const [selectedWeights, setSelectedWeights] = useState({});
   const [products, setProducts] = useState([]);
-  const [banner, setBanner] = useState([])
+  const [banner, setBanner] = useState([]);
 
   useEffect(() => {
     const fetchBanners = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('https://api.panchgavyamrit.com/api/all-banner');
-        const newData = response.data.banners
-        const filterData = newData.filter((x) => x.bannerStatus === true)
+        const response = await axios.get(
+          "https://api.panchgavyamrit.com/api/all-banner"
+        );
+        const newData = response.data.banners;
+        const filterData = newData.filter((x) => x.bannerStatus === true);
         setBanner(filterData); // Assuming the API returns an array of banners
-        console.log(banner)
+        console.log(banner);
       } catch (error) {
         // toast.error("Failed to load banners!");
       } finally {
@@ -44,9 +46,13 @@ const Hero = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("https://api.panchgavyamrit.com/api/get-product");
-      const productRecord = response.data.products
-      const filterbestseller = productRecord.filter((x) => x.bestseller === true)
+      const response = await axios.get(
+        "https://api.panchgavyamrit.com/api/get-product"
+      );
+      const productRecord = response.data.products;
+      const filterbestseller = productRecord.filter(
+        (x) => x.bestseller === true
+      );
       setProducts(filterbestseller);
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -54,11 +60,13 @@ const Hero = () => {
   };
 
   useEffect(() => {
-    fetchProducts()
-  }, [])
+    fetchProducts();
+  }, []);
 
   const handleWeightChange = (productId, productWeight) => {
-    const selectedProduct = products.find((product) => product._id === productId);
+    const selectedProduct = products.find(
+      (product) => product._id === productId
+    );
     const productInfo = selectedProduct?.productInfo.find(
       (info) => info.productweight === productWeight
     );
@@ -91,7 +99,7 @@ const Hero = () => {
     navigate(
       `/product/product-details/${productId}?weight=${weight}&price=${price}&stock=${stock}`
     );
-  }
+  };
 
   const handleScroll = () => {
     const section = document.getElementById("stats-section");
@@ -240,7 +248,6 @@ const Hero = () => {
     },
   ];
 
-
   return (
     <>
       <section className="sidebutton">
@@ -296,7 +303,10 @@ const Hero = () => {
               data-bs-target="#carouselExampleControls"
               data-bs-slide="prev"
             >
-              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span
+                className="carousel-control-prev-icon"
+                aria-hidden="true"
+              ></span>
               <span className="visually-hidden">Previous</span>
             </button>
             <button
@@ -305,15 +315,15 @@ const Hero = () => {
               data-bs-target="#carouselExampleControls"
               data-bs-slide="next"
             >
-              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span
+                className="carousel-control-next-icon"
+                aria-hidden="true"
+              ></span>
               <span className="visually-hidden">Next</span>
             </button>
           </div>
         </div>
       </section>
-
-
-
 
       <section className="hero-product">
         <div className="container">
@@ -322,96 +332,124 @@ const Hero = () => {
           </div>
           <div className="slider-container">
             <Slider {...settings}>
-              {
-                products.map((product, index) => (
-                  <div key={index}>
-                    <div className="product-card">
-                      {/* <Link to={"/product/product-details"}> */}
-                      <div className="product-image">
-                        <img src={product.productImage[0]}
-                          alt={product.productName} />
-                      </div>
-                      <div className="productName">
-                        <h3 className="product-title">
-                          {truncateText(product.productName, 3)}
-                          {/* {product.productName} */}
-                        </h3>
-                        <div className="price text-end">
-                          {selectedWeights[product._id] ? (
-                            <>
-                              {selectedWeights[product._id]?.discountPercentage > 0 ? (
-                                <>
-                                  <span className="current-price">
-                                    <del>&#8377; {selectedWeights[product._id]?.originalPrice}</del>
-                                  </span> <br />
-                                  <span className="original-price">
-                                    Off {selectedWeights[product._id]?.discountPercentage}%
-                                  </span> <br />
-                                  <span className="current-price">
-                                    &#8377; {selectedWeights[product._id]?.price}
-                                  </span>
-                                </>
-                              ) : (
+              {products.map((product, index) => (
+                <div key={index}>
+                  <div className="product-card">
+                    {/* <Link to={"/product/product-details"}> */}
+                    <div className="product-image">
+                      <img
+                        src={product.productImage[0]}
+                        alt={product.productName}
+                      />
+                    </div>
+                    <div className="productName">
+                      <h3 className="product-title">
+                        {truncateText(product.productName, 3)}
+                        {/* {product.productName} */}
+                      </h3>
+                      <div className="price text-end">
+                        {selectedWeights[product._id] ? (
+                          <>
+                            {selectedWeights[product._id]?.discountPercentage >
+                            0 ? (
+                              <>
+                                <span className="current-price">
+                                  <del>
+                                    &#8377;{" "}
+                                    {
+                                      selectedWeights[product._id]
+                                        ?.originalPrice
+                                    }
+                                  </del>
+                                </span>{" "}
+                                <br />
+                                <span className="original-price">
+                                  Off{" "}
+                                  {
+                                    selectedWeights[product._id]
+                                      ?.discountPercentage
+                                  }
+                                  %
+                                </span>{" "}
+                                <br />
                                 <span className="current-price">
                                   &#8377; {selectedWeights[product._id]?.price}
                                 </span>
-                              )}
-                            </>
-                          ) : (
-                            <>
-                              {product.productInfo[0].productDiscountPercentage > 0 ? (
-                                <>
-                                  <span className="current-price">
-                                    <del>&#8377; {product.productInfo[0].productPrice}</del>
-                                  </span> <br />
-                                  <span className="original-price">
-                                    Off {product.productInfo[0].productDiscountPercentage}%
-                                  </span> <br />
-                                  <span className="current-price">
-                                    &#8377; {product.productInfo[0].productFinalPrice}
-                                  </span>
-                                </>
-                              ) : (
+                              </>
+                            ) : (
+                              <span className="current-price">
+                                &#8377; {selectedWeights[product._id]?.price}
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            {product.productInfo[0].productDiscountPercentage >
+                            0 ? (
+                              <>
                                 <span className="current-price">
-                                  &#8377; {product.productInfo[0].productFinalPrice}
+                                  <del>
+                                    &#8377;{" "}
+                                    {product.productInfo[0].productPrice}
+                                  </del>
+                                </span>{" "}
+                                <br />
+                                <span className="original-price">
+                                  Off{" "}
+                                  {
+                                    product.productInfo[0]
+                                      .productDiscountPercentage
+                                  }
+                                  %
+                                </span>{" "}
+                                <br />
+                                <span className="current-price">
+                                  &#8377;{" "}
+                                  {product.productInfo[0].productFinalPrice}
                                 </span>
-                              )}
-                            </>
-                          )}
-                        </div>
-
-
+                              </>
+                            ) : (
+                              <span className="current-price">
+                                &#8377;{" "}
+                                {product.productInfo[0].productFinalPrice}
+                              </span>
+                            )}
+                          </>
+                        )}
                       </div>
-                      {/* </Link> */}
-
-
-                      <label htmlFor={`pot-${product._id}`} className="pot-label">
-                        *Weight:
-                      </label>
-                      <select id={`pot-${product._id}`} className="pot-select" onChange={(e) =>
-                        handleWeightChange(product._id, e.target.value)
-                      }>
-                        <option>--- Please Select ---</option>
-                        {product.productInfo.map((info) => (
-                          <option
-                            key={info.productweight}
-                            value={info.productweight}
-                          >
-                            {info.productweight}
-                          </option>
-                        ))}
-                      </select>
-
-                      <button
-                        onClick={() => handleViewDetails(product._id)}
-                        className="add-to-cart"
-                      >
-                        View Details <i class="bi bi-chevron-double-right"></i>
-                      </button>
                     </div>
+                    {/* </Link> */}
+
+                    <label htmlFor={`pot-${product._id}`} className="pot-label">
+                      *Weight:
+                    </label>
+                    <select
+                      id={`pot-${product._id}`}
+                      className="pot-select"
+                      onChange={(e) =>
+                        handleWeightChange(product._id, e.target.value)
+                      }
+                    >
+                      
+                      {product.productInfo.map((info) => (
+                        <option
+                          key={info.productweight}
+                          value={info.productweight}
+                        >
+                          {info.productweight}
+                        </option>
+                      ))}
+                    </select>
+
+                    <button
+                      onClick={() => handleViewDetails(product._id)}
+                      className="add-to-cart"
+                    >
+                      View Details <i class="bi bi-chevron-double-right"></i>
+                    </button>
                   </div>
-                ))
-              }
+                </div>
+              ))}
             </Slider>
           </div>
         </div>
@@ -421,8 +459,8 @@ const Hero = () => {
         <div className="container">
           <div className="row mt-3">
             <div className="col-md-12 mt-2">
-              <div className="cartimagediv" style={{ }}>
-                <img src={offer} alt="" className="cartImage"/>
+              <div className="cartimagediv" style={{}}>
+                <img src={offer} alt="" className="cartImage" />
               </div>
             </div>
           </div>
@@ -462,11 +500,11 @@ const Hero = () => {
             <p>Orders In Month</p>
           </div>
           <div className="stat-item">
-            <h1>{inView && <CountUp start={0} end={17} duration={2} />}+</h1>
-            <p>Plants And Flowers Categories</p>
+            <h1>{inView && <CountUp start={0} end={100} duration={2} />}+</h1>
+            <p>Product</p>
           </div>
           <div className="stat-item">
-            <h1>{inView && <CountUp start={0} end={10} duration={2} />}+</h1>
+            <h1>{inView && <CountUp start={0} end={8} duration={2} />}+</h1>
             <p>Years Of Experience</p>
           </div>
           <div className="stat-item">
@@ -491,10 +529,10 @@ const Hero = () => {
                     <h6>Sweets & Cookies</h6>
                     <h4>Best Quality Cookies & Sweets</h4>
                     <p>
-                      In the category of fruits, a minimarket typically offers a
-                      selection of fresh fruits for customers to purchase. Here
-                      are some key points regarding the fruit category in a
-                      minimarket:
+                      In the Sweets & Cookies category, customers can indulge in
+                      a wide variety of delicious treats made from the finest
+                      ingredients. From traditional sweets to gourmet cookies,
+                      this section offers something for every taste bud.
                     </p>
                     {/* <Link className="button_" to="">
                       Show More
@@ -509,9 +547,10 @@ const Hero = () => {
                   <h6>Pure Cow Ghee</h6>
                   <h4>100% Shudhta Ka Vada</h4>
                   <p>
-                    Minimarkets stock a variety of products, including basic
-                    groceries, snacks, beverages, household supplies, personal
-                    care items, and often tobacco products and newspapers.
+                    Experience the purity and richness of Pure Cow Ghee, a
+                    staple for every household. Made with 100% natural
+                    ingredients and adhering to the highest quality standards,
+                    this ghee promises unmatched flavor and health benefits.
                   </p>
                   {/* <Link className="button_" to="">
                     Show More
@@ -525,10 +564,7 @@ const Hero = () => {
                   <h6>Cooking Refined Oil</h6>
                   <h4>100% Pure Origional</h4>
                   <p>
-                    The selection is typically smaller than that of a
-                    supermarket or grocery store, focusing on essential items
-                    that customers might need for immediate consumption or daily
-                    use.
+                  Bring the richness of Cow Ghee to your meals with a promise of purity and authenticity. Minimarkets cater to the essential needs of customers, and Cow Ghee stands out as a must-have product for its unparalleled quality and versatility.
                   </p>
                   {/* <Link className="button_" to="">
                     Show More
