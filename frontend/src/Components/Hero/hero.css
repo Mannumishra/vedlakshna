@@ -233,7 +233,7 @@
 .price {
   margin: 8px 0;
   width: 30%;
-  text-align: end;
+  /* text-align: end; */
 }
 
 .current-price {
@@ -473,7 +473,8 @@ select:focus-visible {
   justify-Content: center;
   align-Items: center;
 }
-.cartImage{
+
+.cartImage {
   height: 250px;
   width: 100%;
 }
@@ -481,10 +482,11 @@ select:focus-visible {
 
 
 @media only screen and (max-width: 768px) {
-  .cartImage{
+  .cartImage {
     height: 120px;
     width: 100%;
   }
+
   .article_card {
     max-width: 100%;
   }

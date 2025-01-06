@@ -18,13 +18,14 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("Online");
   const [cupanCode, setCupanCode] = useState([])
   const [discount, setDiscount] = useState(0);
+  const [isCouponApplied, setIsCouponApplied] = useState(false);
 
 
 
   useEffect(() => {
     const getCupancode = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/all-vouchers");
+        const res = await axios.get("https://api.panchgavyamrit.com/api/all-vouchers");
         if (res.status === 200) {
           setCupanCode(res.data.data);
         }
@@ -91,12 +92,6 @@ const Checkout = () => {
     }
   }, [shippingAddress.postalCode, cartItems]);
 
-  useEffect(() => {
-    if (subtotal && shipping !== null) {
-      setTotal(subtotal + shipping - discount);
-    }
-  }, [subtotal, shipping, discount]);
-
   const calculateCartSummary = async (cartItems) => {
     let tempSubtotal = 0;
 
@@ -132,15 +127,35 @@ const Checkout = () => {
 
 
   const validateCouponCode = () => {
-    const validCoupon = cupanCode.find(coupon => coupon.code === applycupanValue && coupon.vouchersStatus);
+    if (isCouponApplied) {
+      Swal.fire("Error", "A coupon has already been applied.", "error");
+      return;
+    }
+
+    const validCoupon = cupanCode.find(
+      (coupon) => coupon.code === applycupanValue && coupon.vouchersStatus
+    );
     if (validCoupon) {
-      const discountAmount = (subtotal * validCoupon.discount) / 100;
-      setDiscount(discountAmount);
-      Swal.fire("Success", `Coupon applied! You saved ₹${discountAmount.toFixed(2)}.`, "success");
+      const discountAmount = (subtotal * validCoupon.discount) / 100; // Calculate the discount amount
+      setDiscount(discountAmount); // Set the discount state
+      setTotal((prevTotal) => prevTotal - discountAmount); // Update the total
+      setIsCouponApplied(true); // Mark the coupon as applied
+
+      Swal.fire(
+        "Success",
+        `Coupon applied! You saved ₹${discountAmount.toFixed(2)}.`,
+        "success"
+      );
     } else {
       Swal.fire("Error", "Invalid or expired coupon code.", "error");
     }
   };
+
+  useEffect(() => {
+    if (subtotal && shipping !== null) {
+      setTotal(subtotal + shipping - discount);
+    }
+  }, [subtotal, shipping]);
 
 
   const navigate = useNavigate();
@@ -173,6 +188,7 @@ const Checkout = () => {
           products: cartItems,
           shippingAddress,
           paymentMethod,
+          cupanCode: applycupanValue || null
         };
 
         try {
@@ -400,7 +416,7 @@ const Checkout = () => {
                     placeholder="Coupon Code"
                   />{" "}
                   &nbsp;
-                  <button className="add-to-cart" onClick={validateCouponCode}>Apply</button>
+                  <button className="cupan-code-button" onClick={validateCouponCode}>Apply cupan</button>
                 </div>
                 <div className="form-group">
                   <label htmlFor="payment-method">Payment Method</label>

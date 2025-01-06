@@ -15,36 +15,63 @@ const ProductDetails = () => {
 
   // Extract weight from the URL query params
   const queryParams = new URLSearchParams(location.search);
-  const weight = queryParams.get('weight');
-  const price = queryParams.get('price');
+  const initialWeight = queryParams.get('weight') || ''; // default to empty if no weight in query
+  const initialPrice = queryParams.get('price') || '';
   const stock = queryParams.get('stock');
 
   const [quantity, setQuantity] = useState(1);
   const [currentImage, setCurrentImage] = useState(""); // For tracking the selected image
   const [productDetails, setProductDetails] = useState(null);
+  const [selectedWeight, setSelectedWeight] = useState(initialWeight);
+  const [price, setPrice] = useState(initialPrice);
+  const [availability, setAvailability] = useState(stock === "Available");
+  const [weightData, setWeightData] = useState(null); // To store weight specific data
+
+
 
   const increaseQuantity = () => setQuantity((prev) => prev + 1);
   const decreaseQuantity = () =>
     setQuantity((prev) => (prev > 0 ? prev - 1 : 0));
 
-  // Use axios to fetch product details
   useEffect(() => {
     const fetchProductDetails = async () => {
       try {
         const response = await axios.get(`https://api.panchgavyamrit.com/api/single-product/${id}`);
         setProductDetails(response.data.product);
-        // Set the first image as the default selected image
         setCurrentImage(response.data.product.productImage[0]);
+
+        // Initialize weight data
+        if (response.data.product.productInfo.length > 0) {
+          const initialWeightData = response.data.product.productInfo.find(option => option.productweight === initialWeight);
+          if (initialWeightData) {
+            setWeightData(initialWeightData);
+            setPrice(initialWeightData.productPrice);
+            setAvailability(weightData.stock.trim().toLowerCase() === "available");
+          }
+        }
       } catch (error) {
         console.error("Error fetching product details", error);
       }
     };
     fetchProductDetails();
+  }, [id, initialWeight]);
 
-    window.scrollTo({
-      top: 0,
-    })
-  }, [id, weight]);
+  const handleWeightChange = (event) => {
+    const selectedWeight = event.target.value;
+    setSelectedWeight(selectedWeight);
+
+    // Find the selected weight data from the productInfo array
+    const weightData = productDetails?.productInfo.find(option => option.productweight === selectedWeight);
+
+    console.log(weightData)
+    // If weight data is found, update price and stock availability
+    if (weightData) {
+      setPrice(weightData.productPrice);  // Update price with the selected weight's price
+      setAvailability(weightData.stock === "Available");  // Set stock availability
+      setWeightData(weightData);  // Store the weight data for later use
+    }
+  };
+
 
   const addToCart = () => {
     if (!productDetails) return;
@@ -70,8 +97,8 @@ const ProductDetails = () => {
         productId: productDetails._id,
         productName: productDetails.productName,
         productImage: productDetails.productImage[0],
-        price,
-        weight,
+        price: price,  // Use updated price
+        weight: selectedWeight,
         quantity,
       };
       existingCart.push(cartProduct);
@@ -153,10 +180,16 @@ const ProductDetails = () => {
                     <b>Category:</b><span style={{ textTransform: "capitalize" }}> {productDetails.categoryName.categoryName}</span>
                   </li>
                   <li>
-                    <b>Availability:</b> {stock === "Available" ? "In Stock" : "Out of Stock"}
+                    <b>Availability:</b> {weightData && weightData.stock === "Available" ? "In Stock" : "Out of Stock"}
                   </li>
+
                   <li>
-                    <b>Weight:</b> {weight}
+                    <b>Weight:</b>
+                    <select value={selectedWeight} onChange={handleWeightChange}>
+                      {productDetails.productInfo.map((option, index) => (
+                        <option key={index} value={option.productweight}>{option.productweight}</option>
+                      ))}
+                    </select>
                   </li>
                   <li>
                     <div>
@@ -174,7 +207,7 @@ const ProductDetails = () => {
                     &nbsp;
                   </li>
                   <li>
-                    {stock === "Available" ? (
+                    {availability ? (
                       <button
                         className="add-to-cart"
                         onClick={addToCart}
@@ -187,6 +220,7 @@ const ProductDetails = () => {
                       </p>
                     )}
                   </li>
+
 
                 </ul>
               </div>

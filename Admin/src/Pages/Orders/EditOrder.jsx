@@ -252,6 +252,14 @@ const EditOrder = () => {
                                             <td>{new Date(order.orderDate).toLocaleString()}</td>
                                         </tr>
                                         <tr>
+                                            <th scope="row">Cupan Code</th>
+                                            <td>{order.cupanCode}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Cupan Code Discount Amount</th>
+                                            <td>₹{order.discountCupan}</td>
+                                        </tr>
+                                        <tr>
                                             <th scope="row">Shipping</th>
                                             <td>₹{order.shippingCost}</td>
                                         </tr>
@@ -323,6 +331,7 @@ const EditOrder = () => {
                                         <p className="mb-1">Weight: {product.weight}</p>
                                         <p className="mb-1">Quantity: {product.quantity}</p>
                                         <p className="mb-0">Price: ₹{product.price}</p>
+                                        <p className="mb-0">Subtotal Price: ₹{product.price * product.quantity}</p>
                                     </div>
                                 ))}
                             </div>

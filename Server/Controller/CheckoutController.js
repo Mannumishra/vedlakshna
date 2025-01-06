@@ -1,7 +1,8 @@
 const Checkout = require("../Models/CheckoutModel");
 const Razorpay = require('razorpay');
 const crypto = require('crypto');
-const axios = require("axios")
+const axios = require("axios");
+const CupanCode = require("../Models/VouchersModel");
 
 const razorpayInstance = new Razorpay({
     key_id: 'rzp_live_FjN3xa6p5RsEl6',
@@ -9,12 +10,15 @@ const razorpayInstance = new Razorpay({
 });
 
 exports.checkout = async (req, res) => {
-    console.log(req.body)
-    const { userId, products, shippingAddress, paymentMethod } = req.body;
+    console.log(req.body);
+    const { userId, products, shippingAddress, paymentMethod, cupanCode } = req.body;
 
     const pincode = shippingAddress.postalCode;
     const subtotal = products.reduce((total, item) => total + (item.price * item.quantity), 0);
     let shippingCost = 200;
+    let discountAmount = 0;
+
+    // Fetch shipping charge based on pincode
     if (pincode) {
         try {
             const response = await axios.get("https://api.panchgavyamrit.com/api/all-pincode");
@@ -26,8 +30,33 @@ exports.checkout = async (req, res) => {
             console.error("Error fetching shipping charge:", error);
         }
     }
+    // Validate coupon and calculate discount
+    if (cupanCode) {
+        try {
+            const coupon = await validateCoupon(cupanCode);
+            if (coupon && coupon.vouchersStatus) {
+                if (coupon.discount > 0) {
+                    if (coupon.discount < 100) {
+                        discountCupan = (subtotal * coupon.discount) / 100;
+                    } else {
+                        discountCupan = coupon.discount;
+                    }
+                    discountCupan = Math.min(discountCupan, subtotal);
+                } else {
+                    return res.status(400).json({ error: "Coupon code has no valid discount" });
+                }
+            } else {
+                return res.status(400).json({ error: "Invalid or expired coupon code" });
+            }
+        } catch (error) {
+            console.error("Error validating coupon:", error);
+            return res.status(500).json({ error: "Error validating coupon" });
+        }
+    }
 
-    const totalAmount = subtotal + shippingCost;
+    const totalAmount = subtotal + shippingCost - discountCupan;
+
+
     try {
         const checkout = new Checkout({
             userId,
@@ -37,26 +66,34 @@ exports.checkout = async (req, res) => {
                 price: item.price,
                 weight: item.weight,
                 quantity: item.quantity,
-                productId: item.productId
+                productId: item.productId,
             })),
             shippingAddress,
             paymentMethod,
             totalAmount,
             shippingCost,
+            cupanCode,
+            discountCupan
         });
+
+        // If payment method is online, create a Razorpay order
         if (paymentMethod === 'Online') {
             const razorpayOrder = await razorpayInstance.orders.create({
-                amount: totalAmount * 100,
+                amount: totalAmount * 100, // Razorpay expects amount in paise
                 currency: 'INR',
                 receipt: checkout._id.toString(),
                 payment_capture: 1,
             });
-            console.log("", razorpayOrder)
+
+            console.log("Razorpay Order:", razorpayOrder);
+
             checkout.paymentInfo = {
                 transactionId: razorpayOrder.id,
                 orderId: razorpayOrder.receipt,
             };
+
             await checkout.save();
+
             return res.status(201).json({
                 message: 'Checkout successful. Payment initiated via Razorpay.',
                 checkout,
@@ -72,6 +109,7 @@ exports.checkout = async (req, res) => {
         res.status(500).json({ error: 'Server error during checkout process' });
     }
 };
+
 
 
 exports.verifyPayment = async (req, res) => {
@@ -210,4 +248,13 @@ exports.getorderByUserID = async (req, res) => {
     } catch (error) {
         console.log(error)
     }
+}
+
+
+async function validateCoupon(code) {
+    const coupon = await CupanCode.findOne({ code: code });
+    if (!coupon) {
+        return null; // Invalid or expired coupon
+    }
+    return coupon;
 }

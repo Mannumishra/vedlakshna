@@ -63,6 +63,27 @@ const Hero = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    // Set default selected weights for products
+    if (products.length > 0) {
+      const defaultWeights = {};
+      products.forEach((product) => {
+        const firstProductInfo = product.productInfo[0];
+        if (firstProductInfo) {
+          defaultWeights[product._id] = {
+            weight: firstProductInfo.productweight,
+            price: firstProductInfo.productFinalPrice,
+            originalPrice: firstProductInfo.productPrice,
+            discountPercentage: firstProductInfo.productDiscountPercentage,
+            stock: firstProductInfo.stock,
+          };
+        }
+      });
+      setSelectedWeights(defaultWeights);
+    }
+  }, [products]);
+
+
   const handleWeightChange = (productId, productWeight) => {
     const selectedProduct = products.find(
       (product) => product._id === productId
@@ -351,7 +372,7 @@ const Hero = () => {
                         {selectedWeights[product._id] ? (
                           <>
                             {selectedWeights[product._id]?.discountPercentage >
-                            0 ? (
+                              0 ? (
                               <>
                                 <span className="current-price">
                                   <del>
@@ -385,7 +406,7 @@ const Hero = () => {
                         ) : (
                           <>
                             {product.productInfo[0].productDiscountPercentage >
-                            0 ? (
+                              0 ? (
                               <>
                                 <span className="current-price">
                                   <del>
@@ -430,7 +451,7 @@ const Hero = () => {
                         handleWeightChange(product._id, e.target.value)
                       }
                     >
-                      
+
                       {product.productInfo.map((info) => (
                         <option
                           key={info.productweight}
@@ -564,7 +585,7 @@ const Hero = () => {
                   <h6>Cooking Refined Oil</h6>
                   <h4>100% Pure Origional</h4>
                   <p>
-                  Bring the richness of Cow Ghee to your meals with a promise of purity and authenticity. Minimarkets cater to the essential needs of customers, and Cow Ghee stands out as a must-have product for its unparalleled quality and versatility.
+                    Bring the richness of Cow Ghee to your meals with a promise of purity and authenticity. Minimarkets cater to the essential needs of customers, and Cow Ghee stands out as a must-have product for its unparalleled quality and versatility.
                   </p>
                   {/* <Link className="button_" to="">
                     Show More

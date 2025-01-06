@@ -20,7 +20,7 @@ const Checkout = () => {
     // Fetch all vouchers
     const getCupancode = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/all-vouchers");
+        const res = await axios.get("https://api.panchgavyamrit.com/api/all-vouchers");
         if (res.status === 200) {
           setCupanCode(res.data.data);
         }

@@ -108,6 +108,10 @@ const checkoutSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    cupanCode: {
+        type: String
+    },
+    discountCupan: { type: Number, default: 0 },
 });
 
 const Checkout = mongoose.model('Checkout', checkoutSchema);

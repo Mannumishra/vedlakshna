@@ -37,10 +37,10 @@ const EditPincode = () => {
     };
 
     const validateForm = () => {
-        if (pincodeData.pincode.length !== 6) {
-            toast.error('Pincode must be 6 digits.');
-            return false;
-        }
+        // if (pincodeData.pincode.length !== 6) {
+        //     toast.error('Pincode must be 6 digits.');
+        //     return false;
+        // }
         if (isNaN(pincodeData.pincode)) {
             toast.error('Pincode must be a number.');
             return false;
